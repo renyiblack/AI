@@ -1,7 +1,7 @@
 import pyautogui
 
 
-def Loot():
+def loot():
     print(">>> Starting looting...")
 
     pyautogui.keyDown('shift')

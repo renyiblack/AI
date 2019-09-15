@@ -3,7 +3,7 @@ import pyautogui
 
 # these settings are made for 1366x768, change x,y if in other resolution, possibly needs to change rgb too
 
-def HealLowLVL():
+def heal_low_lvl():
     if not (pyautogui.pixelMatchesColor(1237, 310, (255, 113, 113))):  # life bar(status) ~30%
         pyautogui.press('f1')  # [3 line from bot to top]
         print(">>> using life pot...")
@@ -17,7 +17,7 @@ def HealLowLVL():
             print(">>> using mana pot...")
 
 
-def HealRook():
+def heal_rook():
     if not (pyautogui.pixelMatchesColor(1237, 310, (255, 113, 113))):  # life bar(status) ~30%
         pyautogui.press('f1')  # [3 line from bot to top]
         print(">>> using life pot...")

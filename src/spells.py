@@ -1,6 +1,6 @@
 import pyautogui
 import time
-from .find import *
+from find import *
 
 
 def spells(coord1, coord2):

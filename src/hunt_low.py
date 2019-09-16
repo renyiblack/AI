@@ -18,17 +18,6 @@ def hunt_low(starter_mark, max_markers):
            "../imgs/Markers/imagem16.png", "../imgs/Markers/imagem17.png", "../imgs/Markers/imagem18.png",
            "../imgs/Markers/imagem19.png", "../imgs/Markers/imagem20.png"]
 
-    # TODO try to find a formula to auto calculate positions
-
-    # begin map
-
-    map_x = 1198
-    map_y = 27
-    map_x1 = 1305
-    map_y1 = 137
-
-    # end map
-
     '''
         To use on 1366x768(16:9) set offset to 0
         To use on 1920x1080(21:9) set offset_battle_x to 554 and offset_skills_y to 312
@@ -37,16 +26,27 @@ def hunt_low(starter_mark, max_markers):
     # begin params
 
     offset_battle_x = 554
-    battle_x = 1194 + offset_battle_x      # 1748
+    offset_skills_y = 312
+
+    map_x = 1198 + offset_battle_x  # 1752
+    map_y = 27
+    map_x1 = 1305 + offset_battle_x  # 1859
+    map_y1 = 137
+
+    battle_x = 1194 + offset_battle_x  # 1748
     battle_y = 456
+
     battle_mob_x = 1216 + offset_battle_x  # 1770
     battle_mob_y = 471
-    follow_x0 = 1350 + offset_battle_x     # 1904
+
+    follow_x0 = 1350 + offset_battle_x  # 1904
     follow_y0 = 170
 
-    offset_skills_y = 312
-    heal_x0 = 459                          # 443(1920x1080)
-    heal_y0 = 587 + offset_skills_y        # 899(1920x1080)
+    heal_x0 = 459  # 443(1920x1080)
+    heal_y0 = 587 + offset_skills_y  # 899(1920x1080)
+
+    offset_pos_x1 = 1251 + offset_battle_x
+    offset_pos_x2 = 1253 + offset_battle_x
 
     # end params
 
@@ -68,15 +68,17 @@ def hunt_low(starter_mark, max_markers):
                 print(">>> q pressed!")
             else:
                 # Blue color of exura ico in middle, right before the timer resets
-                if not pyautogui.pixelMatchesColor(heal_x0, heal_y0, (63, 108, 154)):
-                    heal_low_lvl()
+                # if not pyautogui.pixelMatchesColor(heal_x0, heal_y0, (63, 108, 154)):
+                #    heal_low_lvl()
                 # look at battle list and see if first target is red or pink, if so, you're attacking
                 if (pyautogui.pixelMatchesColor(battle_x, battle_y, (255, 0, 0)) or
                         pyautogui.pixelMatchesColor(battle_x, battle_y, (255, 128, 128))):
+
                     # If pixel at the top left corner of head on follow button is not green, click it
                     if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, [104, 246, 104]):
-                        pyautogui.click(follow_y0, follow_y0)  # follow
+                        pyautogui.click(follow_x0, follow_y0)  # follow
                         print(">>> Following...")
+
                     attacking = 1
                     pyautogui.moveTo(5, 5)  # moving mouse out of the way
                     # TODO spells()
@@ -85,7 +87,7 @@ def hunt_low(starter_mark, max_markers):
                     if attacking == 1:
                         print(">>> We've battled before this turn!")
                         attacking = 0
-                        time.sleep(0.5)  # Delay in case the mob dies 1sqm from player
+                        time.sleep(0.7)  # Delay in case the mob dies 1sqm from player
                         loot()
                         print(">>> all looted!")
                     else:
@@ -94,37 +96,44 @@ def hunt_low(starter_mark, max_markers):
                             print(">>> Resetting!")
                         else:
                             print(">>> Looking for marker on map...")
+
                             # Search for mark on map, returns pos[0,0], needs to sum with original map[0,0]
                             coord_1, coord_2 = imagesearcharea(img[starter_mark], map_x, map_y, map_x1, map_y1)
                             pos_x = map_x + coord_1 + 3
                             pos_y = map_y + coord_2 + 3
+
                             # See if battle list is empty(pixel at location where the top left corner of the monster
-                            # hp bar should've be)
+                            # hp bar should be)
                             if not (pyautogui.pixelMatchesColor(battle_mob_x, battle_mob_y, (64, 64, 64))):
                                 print(">>> Battle list is not empty!")
                                 if attacking == 0:
                                     print(">>> Attacking...")
                                     pyautogui.click(battle_mob_x, battle_mob_y)  # attack
-                                    # If pixel at the top corner of head on follow button is not green, click follow
-                                    if not pyautogui.pixelMatchesColor(follow_y0, follow_y0, [104, 246, 104]):
-                                        pyautogui.click(follow_y0, follow_y0)  # follow
-                                        print(">>> Following...")
                                     attacking = 1
+
+                                    # If pixel at the top corner of head on follow button is not green, click follow
+                                    if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, [104, 246, 104]):
+                                        pyautogui.click(follow_x0, follow_y0)  # follow
+                                        print(">>> Following...")
+
                                 # If pixel at top left corner in battle is white or black, something is hitting us
                                 if ((pyautogui.pixelMatchesColor(battle_x, battle_y, (0, 0, 0))
                                      or
                                      pyautogui.pixelMatchesColor(battle_x, battle_y, (255, 255, 255)))):
+
                                     print(">>> Something is hitting us, hitting back...")
                                     pyautogui.click(battle_mob_x, battle_mob_y)  # attack
-                                    # If pixel at the top corner of head on follow button is not green, click follow
-                                    if not pyautogui.pixelMatchesColor(follow_y0, follow_y0, [104, 246, 104]):
-                                        pyautogui.click(follow_y0, follow_y0)  # follow
-                                        print(">>> Following...")
                                     attacking = 1
+
+                                    # If pixel at the top corner of head on follow button is not green, click follow
+                                    if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, [104, 246, 104]):
+                                        pyautogui.click(follow_x0, follow_y0)  # follow
+                                        print(">>> Following...")
+
                             else:
                                 print(">>> Battle list is empty!")
-                                # If we're not in mark center(1252, 82), move
-                                if pos_x < 1251 or pos_x > 1253 or pos_y < 81 or pos_y > 83:
+                                # If we're not in mark center(1252 + offset_battle_x, 82), move
+                                if pos_x < offset_pos_x1 or pos_x > offset_pos_x2 or pos_y < 81 or pos_y > 83:
                                     if pos_x == saved_x and pos_y == saved_y:
                                         print(">>> Moving...")
                                         pyautogui.click(pos_x, pos_y)

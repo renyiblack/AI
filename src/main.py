@@ -2,6 +2,7 @@ from src.hunt_low import *
 
 '''
     This program is set to work on a 1366x768(16:9) display
+    Remember to change params on hunt_low.py, heal.py and loot.py
 '''
 
 

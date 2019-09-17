@@ -21,38 +21,40 @@ def hunt_low(starter_mark, max_markers):
     '''
         To use on 1366x768(16:9) set offset to 0
         To use on 1920x1080(21:9) set offset_battle_x to 554 and offset_skills_y to 312
+        
+        Remember to change params on loot.py and heal.py too
     '''
 
     # begin params
 
-    offset_battle_x = 554
-    offset_skills_y = 312
+    offset_battle_x = 0                         # 554
+    offset_skills_y = 0                         # 312
 
-    map_x = 1198 + offset_battle_x  # 1752
+    map_x = 1198 + offset_battle_x              # 1752(1920x1080)
     map_y = 27
-    map_x1 = 1305 + offset_battle_x  # 1859
+    map_x1 = 1305 + offset_battle_x             # 1859(1920x1080)
     map_y1 = 137
 
-    battle_x = 1194 + offset_battle_x  # 1748
+    battle_x = 1194 + offset_battle_x           # 1748(1920x1080)
     battle_y = 456
 
-    battle_mob_x = 1216 + offset_battle_x  # 1770
+    battle_mob_x = 1216 + offset_battle_x       # 1770(1920x1080)
     battle_mob_y = 471
 
-    follow_x0 = 1350 + offset_battle_x  # 1904
+    follow_x0 = 1350 + offset_battle_x          # 1904(1920x1080)
     follow_y0 = 170
 
-    heal_x0 = 459  # 443(1920x1080)
-    heal_y0 = 587 + offset_skills_y  # 899(1920x1080)
+    heal_x0 = 459
+    heal_y0 = 587 + offset_skills_y             # 899(1920x1080)
 
-    offset_pos_x1 = 1251 + offset_battle_x
-    offset_pos_x2 = 1253 + offset_battle_x
+    offset_pos_x1 = 1251 + offset_battle_x      # 1805(1920x1080)
+    offset_pos_x2 = 1253 + offset_battle_x      # 1807(1920x1080)
 
     # end params
 
     saved_x = 0
     saved_y = 0
-    pyautogui.PAUSE = 0.000005
+    pyautogui.PAUSE = 0.005
     pyautogui.FAILSAFE = False
     pyautogui.click(5, 5)
     attacking = 0
@@ -68,8 +70,9 @@ def hunt_low(starter_mark, max_markers):
                 print(">>> q pressed!")
             else:
                 # Blue color of exura ico in middle, right before the timer resets
-                # if not pyautogui.pixelMatchesColor(heal_x0, heal_y0, (63, 108, 154)):
-                #    heal_low_lvl()
+                if not pyautogui.pixelMatchesColor(heal_x0, heal_y0, (63, 108, 154)):
+                    heal_low_lvl()
+
                 # look at battle list and see if first target is red or pink, if so, you're attacking
                 if (pyautogui.pixelMatchesColor(battle_x, battle_y, (255, 0, 0)) or
                         pyautogui.pixelMatchesColor(battle_x, battle_y, (255, 128, 128))):
@@ -101,9 +104,10 @@ def hunt_low(starter_mark, max_markers):
                             coord_1, coord_2 = imagesearcharea(img[starter_mark], map_x, map_y, map_x1, map_y1)
                             pos_x = map_x + coord_1 + 3
                             pos_y = map_y + coord_2 + 3
-
-                            # See if battle list is empty(pixel at location where the top left corner of the monster
-                            # hp bar should be)
+                            '''
+                                See if battle list is empty
+                                Pixel at location where the top left corner of the monster hp bar should be
+                            '''
                             if not (pyautogui.pixelMatchesColor(battle_mob_x, battle_mob_y, (64, 64, 64))):
                                 print(">>> Battle list is not empty!")
                                 if attacking == 0:
@@ -129,7 +133,6 @@ def hunt_low(starter_mark, max_markers):
                                     if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, [104, 246, 104]):
                                         pyautogui.click(follow_x0, follow_y0)  # follow
                                         print(">>> Following...")
-
                             else:
                                 print(">>> Battle list is empty!")
                                 # If we're not in mark center(1252 + offset_battle_x, 82), move

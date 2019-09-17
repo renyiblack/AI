@@ -1,6 +1,7 @@
 import pyautogui
 import time
-from find import *
+
+from src.imagesearch import imagesearcharea
 
 
 def spells(coord1, coord2):
@@ -9,13 +10,13 @@ def spells(coord1, coord2):
     if n == 0:
         pyautogui.press('f8')
         time.sleep(.03)
-    if find("exori.png", 527, 803, 527, 803, 0):
+    if imagesearcharea("exori.png", 527, 803, 527, 803):
         # if(n==0): pyautogui.press('f8')
         pyautogui.press('f5')
         n = n + 1
     # n=n+1
     else:
-        if find("exoriGran.png", 601, 802, 601, 802, 0):
+        if imagesearcharea("exoriGran.png", 601, 802, 601, 802):
             pyautogui.press('f7')
             n = n + 1
     if n == 8:

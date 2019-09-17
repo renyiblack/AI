@@ -15,9 +15,3 @@ def heal_low_lvl():
             # [3 line from bot to top]
             pyautogui.press('f2')
             print(">>> using mana pot...")
-
-
-def heal_rook():
-    if not (pyautogui.pixelMatchesColor(1237, 310, (255, 113, 113))):  # life bar(status) ~30%
-        pyautogui.press('f1')  # [3 line from bot to top]
-        print(">>> using life pot...")

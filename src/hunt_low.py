@@ -27,34 +27,34 @@ def hunt_low(starter_mark, max_markers):
 
     # begin params
 
-    offset_battle_x = 0                         # 554
-    offset_skills_y = 0                         # 312
+    offset_battle_x = 0  # 554
+    offset_skills_y = 0  # 312
 
-    map_x = 1198 + offset_battle_x              # 1752(1920x1080)
+    map_x = 1198 + offset_battle_x  # 1752(1920x1080)
     map_y = 27
-    map_x1 = 1305 + offset_battle_x             # 1859(1920x1080)
+    map_x1 = 1305 + offset_battle_x  # 1859(1920x1080)
     map_y1 = 137
 
-    battle_x = 1194 + offset_battle_x           # 1748(1920x1080)
+    battle_x = 1194 + offset_battle_x  # 1748(1920x1080)
     battle_y = 456
 
-    battle_mob_x = 1216 + offset_battle_x       # 1770(1920x1080)
+    battle_mob_x = 1216 + offset_battle_x  # 1770(1920x1080)
     battle_mob_y = 471
 
-    follow_x0 = 1350 + offset_battle_x          # 1904(1920x1080)
+    follow_x0 = 1350 + offset_battle_x  # 1904(1920x1080)
     follow_y0 = 170
 
     heal_x0 = 459
-    heal_y0 = 587 + offset_skills_y             # 899(1920x1080)
+    heal_y0 = 587 + offset_skills_y  # 899(1920x1080)
 
-    offset_pos_x1 = 1251 + offset_battle_x      # 1805(1920x1080)
-    offset_pos_x2 = 1253 + offset_battle_x      # 1807(1920x1080)
+    offset_pos_x1 = 1251 + offset_battle_x  # 1805(1920x1080)
+    offset_pos_x2 = 1253 + offset_battle_x  # 1807(1920x1080)
 
     # end params
 
     saved_x = 0
     saved_y = 0
-    pyautogui.PAUSE = 0.005
+    pyautogui.PAUSE = 0.05
     pyautogui.FAILSAFE = False
     pyautogui.click(5, 5)
     attacking = 0
@@ -123,7 +123,8 @@ def hunt_low(starter_mark, max_markers):
                                 # If pixel at top left corner in battle is white or black, something is hitting us
                                 if ((pyautogui.pixelMatchesColor(battle_x, battle_y, (0, 0, 0))
                                      or
-                                     pyautogui.pixelMatchesColor(battle_x, battle_y, (255, 255, 255)))):
+                                     pyautogui.pixelMatchesColor(battle_x, battle_y,
+                                                                 (255, 255, 255))) and attacking == 0):
 
                                     print(">>> Something is hitting us, hitting back...")
                                     pyautogui.click(battle_mob_x, battle_mob_y)  # attack

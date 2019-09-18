@@ -4,6 +4,8 @@ import time
 from src.imagesearch import imagesearcharea
 
 
+# TODO make this work and add params
+
 def spells(coord1, coord2):
     global n
     # 527,805

@@ -2,7 +2,7 @@ from src.hunt_low import *
 
 '''
     This program is set to work on a 1366x768(16:9) display
-    Remember to change params on hunt_low.py, heal.py and loot.py
+    to make it work in 1920x1080(21:9) change params on hunt_low.py, heal.py and loot.py
 '''
 
 
@@ -17,17 +17,15 @@ def main():
     '''
 
     try:
-        print(">>> Opening source file...")
-        print(">>> Getting hunt parameters...")
+        # Getting hunt params
         with open(hunt_param) as param:
             settings = param.read().splitlines()
 
-        #  print(">>> local = " + settings[0] + ", markers = " + settings[1] + ", max markers = " + settings[2])
     except IndexError:
         print(">>> Error! Change hunt params!")
 
+    # Starting hunt
     if settings[0] == "hunt low lvl":
-        print(">>> Starting hunt low...")
         hunt_low(int(settings[1]), int(settings[2]))
     else:
         print(">>> Hunt not defined!")

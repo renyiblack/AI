@@ -7,6 +7,9 @@ import psutil
 from src.imagesearch import *
 from src.loot import *
 from src.heal import heal_low_lvl
+from src.coord import Coord
+
+
 # from src.sell_loot import sell_loot
 
 
@@ -28,31 +31,47 @@ def hunt_low(starter_mark, max_markers):
 
     # begin params
 
-    offset_battle_x = 0  # 554
-    offset_skills_y = 0  # 312
+    offset_battle = Coord(0, 0)
+    offset_skills = Coord(0, 0)
+
+    # offset_battle_x = 0  # 554
+    # offset_skills_y = 0  # 312
 
     cap_x = 149  # TODO check coord in 1920x1080
     cap_y = 378  # TODO check coord in 1920x1080
 
-    map_x = 1198 + offset_battle_x  # 1752(1920x1080)
-    map_y = 27
-    map_x1 = 1305 + offset_battle_x  # 1859(1920x1080)
-    map_y1 = 137
+    map_begin = Coord(1198 + offset_battle.x, 27)
+    map_end = Coord(1350 + offset_battle.x, 137)
 
-    battle_x = 1194 + offset_battle_x  # 1748(1920x1080)
-    battle_y = 456
+    # map_x = 1198 + offset_battle_x  # 1752(1920x1080)
+    # map_y = 27
+    # map_x1 = 1305 + offset_battle_x  # 1859(1920x1080)
+    # map_y1 = 137
 
-    battle_mob_x = 1216 + offset_battle_x  # 1770(1920x1080)
-    battle_mob_y = 471
+    battle_list = Coord(1194 + offset_battle.x, 456)
 
-    follow_x0 = 1350 + offset_battle_x  # 1904(1920x1080)
-    follow_y0 = 170
+    # battle_x = 1194 + offset_battle_x  # 1748(1920x1080)
+    # battle_y = 456
 
-    heal_x0 = 459
-    heal_y0 = 587 + offset_skills_y  # 899(1920x1080)
+    mob_battle = Coord(1216 + offset_battle.x, 471)
 
-    offset_pos_x1 = 1251 + offset_battle_x  # 1805(1920x1080)
-    offset_pos_x2 = 1253 + offset_battle_x  # 1807(1920x1080)
+    # battle_mob_x = 1216 + offset_battle_x  # 1770(1920x1080)
+    # battle_mob_y = 471
+
+    follow = Coord(1350 + offset_battle.x, 170)
+
+    # follow_x0 = 1350 + offset_battle_x  # 1904(1920x1080)
+    # follow_y0 = 170
+
+    heal = Coord(459, 587 + offset_skills.y)
+
+    # heal_x0 = 459
+    # heal_y0 = 587 + offset_skills_y  # 899(1920x1080)
+
+    click_left = 1251 + offset_battle.x  # 1805(1920x1080)
+    click_right = 1253 + offset_battle.x  # 1807(1920x1080)
+    click_down = 83
+    click_up = 81
 
     # end params
 
@@ -63,23 +82,22 @@ def hunt_low(starter_mark, max_markers):
     gray = (64, 64, 64)  # Gray battle list in the beginning of monster hp bar
     black = (255, 255, 255)  # Black battle list when monster hits us
     green_follow = (104, 246, 104)  # Green color, head left pixel
-    exura_blue = (63, 108, 154)  # Blue color of exura ico in middle TODO change this color
+    exura_blue = (63, 108, 154)  # Blue color of exura ico in middle
     white_cap = (192, 192, 192)  # White color of 0 cap in skills tab
 
     # end colors
 
     # stopped = 0
-    saved_x = 0
-    saved_y = 0
+    marker = Coord(0, 0)
+    pos = Coord(0, 0)
+    saved_pos = Coord(0, 0)
     attacking = 0
     on = 0
 
     # pyautogui.PAUSE = 0.05 value used for debug
-    pyautogui.PAUSE = 0.0000005
+    pyautogui.PAUSE = 0.000005
     pyautogui.FAILSAFE = False
     pyautogui.click(5, 5)
-
-    # TODO create class coord
 
     memory_debug = open("../txt/memory_debug.txt", "a+")
 
@@ -96,23 +114,22 @@ def hunt_low(starter_mark, max_markers):
                 # TODO make it check cap and sell loot
                 # Do we have cap?
                 # if pyautogui.pixelMatchesColor(cap_x, cap_y, white_cap):
-                #    sell_loot(10, img, map_x, map_y, map_x1, map_y1, offset_pos_x1, offset_pos_x2)
+                #    sell_loot(10, img, map_x, map_y, map_x1, map_y1, click_left, click_right)
 
-                # TODO change to shade of blue when not on cd and remove not
                 # Can we heal?
-                # if not pyautogui.pixelMatchesColor(heal_x0, heal_y0, exura_cd_blue):
-                heal_low_lvl()
+                if pyautogui.pixelMatchesColor(heal.x, heal.y, exura_blue):
+                    heal_low_lvl()
 
                 # Are we fighting?
-                if (pyautogui.pixelMatchesColor(battle_x, battle_y, red) or
-                        pyautogui.pixelMatchesColor(battle_x, battle_y, pink)):
+                if (pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, red) or
+                        pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, pink)):
 
                     # Set attacking
                     attacking = 1
 
                     # Are we following?
-                    if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, green_follow):
-                        pyautogui.click(follow_x0, follow_y0)
+                    if not pyautogui.pixelMatchesColor(follow.x, follow.y, green_follow):
+                        pyautogui.click(follow.x, follow.y)
                         pyautogui.moveTo(5, 5)
 
                     # TODO spells()
@@ -141,50 +158,52 @@ def hunt_low(starter_mark, max_markers):
                             starter_mark = 0
                         else:
                             # Search for mark on map, returns pos[0,0], needs to sum with original map[0,0]
-                            coord_1, coord_2 = imagesearcharea(img[starter_mark], map_x, map_y, map_x1, map_y1)
-                            pos_x = map_x + coord_1 + 3
-                            pos_y = map_y + coord_2 + 3
+                            marker.x, marker.y = imagesearcharea(img[starter_mark],
+                                                                 map_begin.x, map_begin.y, map_end.x, map_end.y)
+                            pos.x = map_begin.x + marker.x + 3
+                            pos.y = map_begin.y + marker.y + 3
 
                             # There're monsters nearby!
-                            if not (pyautogui.pixelMatchesColor(battle_mob_x, battle_mob_y, gray)):
+                            if not (pyautogui.pixelMatchesColor(mob_battle.x, mob_battle.y, gray)):
 
                                 # Hit it!
                                 if attacking == 0:
                                     # Attack!
-                                    pyautogui.click(battle_mob_x, battle_mob_y)
+                                    pyautogui.click(mob_battle.x, mob_battle.y)
                                     attacking = 1
 
                                     # Are we following?
-                                    if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, green_follow):
-                                        pyautogui.click(follow_x0, follow_y0)
+                                    if not pyautogui.pixelMatchesColor(follow.x, follow.y, green_follow):
+                                        pyautogui.click(follow.x, follow.y)
 
                                     # Move mouse away!
                                     pyautogui.moveTo(5, 5)
 
-                                # TODO change to elif
+                                # TODO comment this, have no effect. Maybe create func imhit?
                                 # Are we being hit?
-                                if (pyautogui.pixelMatchesColor(battle_x, battle_y, black)) and attacking == 0:
+                                elif pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, black):
 
                                     # Attack!
-                                    pyautogui.click(battle_mob_x, battle_mob_y)
+                                    pyautogui.click(battle_list.x, battle_list.y)
                                     attacking = 1
 
                                     # Are we following?
-                                    if not pyautogui.pixelMatchesColor(follow_x0, follow_y0, green_follow):
-                                        pyautogui.click(follow_x0, follow_y0)
+                                    if not pyautogui.pixelMatchesColor(follow.x, follow.y, green_follow):
+                                        pyautogui.click(follow.x, follow.y)
 
                                     # Move mouse away!
                                     pyautogui.moveTo(5, 5)
                             # We're not in combat!
                             else:
                                 # Are we in mark center(1252 + offset_battle_x, 82)?
-                                if pos_x < offset_pos_x1 or pos_x > offset_pos_x2 or pos_y < 81 or pos_y > 83:
-                                    if pos_x == saved_x and pos_y == saved_y:
-                                        coord_1, coord_2 = imagesearcharea(img[starter_mark], map_x, map_y, map_x1,
-                                                                           map_y1)
-                                        pos_x = map_x + coord_1 + 3
-                                        pos_y = map_y + coord_2 + 3
-                                        pyautogui.click(pos_x, pos_y)
+                                if pos.x < click_left or pos.x > click_right or pos.y < click_up or pos.y > click_down:
+                                    if pos == saved_pos:
+                                        marker.x, marker.y = imagesearcharea(img[starter_mark],
+                                                                             map_begin.x, map_begin.y,
+                                                                             map_end.x, map_end.y)
+                                        pos.x = map_begin.x + marker.x + 3
+                                        pos.y = map_begin.y + marker.y + 3
+                                        pyautogui.click(pos.x, pos.y)
                                         pyautogui.moveTo(5, 5)
 
                                 # We're! Next mark and save memory use
@@ -192,8 +211,7 @@ def hunt_low(starter_mark, max_markers):
                                     starter_mark = starter_mark + 1
                                     memory_debug.write(str(process.memory_info().rss) + "-" + str(starter_mark) + "\n")
 
-                            saved_x = pos_x
-                            saved_y = pos_y
+                            saved_pos = pos
                             gc.collect()
         except MemoryError:
             '''

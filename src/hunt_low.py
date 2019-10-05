@@ -10,9 +10,6 @@ from src.heal import heal_low_lvl
 from src.coord import Coord
 
 
-# from src.sell_loot import sell_loot
-
-
 def hunt_low(starter_mark, max_markers):
     img = ['../imgs/Markers/imagem1.png', '../imgs/Markers/imagem2.png', '../imgs/Markers/imagem3.png',
            '../imgs/Markers/imagem4.png', '../imgs/Markers/imagem5.png', '../imgs/Markers/imagem6.png',
@@ -31,42 +28,22 @@ def hunt_low(starter_mark, max_markers):
 
     # begin params
 
-    offset_battle = Coord(0, 0)
-    offset_skills = Coord(0, 0)
-
-    # offset_battle_x = 0  # 554
-    # offset_skills_y = 0  # 312
+    offset_battle = Coord(0, 0)  # x=554
+    offset_skills = Coord(0, 0)  # y=312
 
     cap_x = 149  # TODO check coord in 1920x1080
     cap_y = 378  # TODO check coord in 1920x1080
 
-    map_begin = Coord(1198 + offset_battle.x, 27)
-    map_end = Coord(1350 + offset_battle.x, 137)
+    map_begin = Coord(1198 + offset_battle.x, 27)  # x=1752(1920x1080)
+    map_end = Coord(1350 + offset_battle.x, 137)  # x=1859(1920x1080)
 
-    # map_x = 1198 + offset_battle_x  # 1752(1920x1080)
-    # map_y = 27
-    # map_x1 = 1305 + offset_battle_x  # 1859(1920x1080)
-    # map_y1 = 137
+    battle_list = Coord(1194 + offset_battle.x, 456)  # x=1748(1920x1080)
 
-    battle_list = Coord(1194 + offset_battle.x, 456)
+    mob_battle = Coord(1216 + offset_battle.x, 471)  # x=1770(1920x1080)
 
-    # battle_x = 1194 + offset_battle_x  # 1748(1920x1080)
-    # battle_y = 456
+    follow = Coord(1350 + offset_battle.x, 170)  # x=1904(1920x1080)
 
-    mob_battle = Coord(1216 + offset_battle.x, 471)
-
-    # battle_mob_x = 1216 + offset_battle_x  # 1770(1920x1080)
-    # battle_mob_y = 471
-
-    follow = Coord(1350 + offset_battle.x, 170)
-
-    # follow_x0 = 1350 + offset_battle_x  # 1904(1920x1080)
-    # follow_y0 = 170
-
-    heal = Coord(459, 587 + offset_skills.y)
-
-    # heal_x0 = 459
-    # heal_y0 = 587 + offset_skills_y  # 899(1920x1080)
+    heal = Coord(459, 587 + offset_skills.y)  # y=899(1920x1080)
 
     click_left = 1251 + offset_battle.x  # 1805(1920x1080)
     click_right = 1253 + offset_battle.x  # 1807(1920x1080)
@@ -82,12 +59,10 @@ def hunt_low(starter_mark, max_markers):
     gray = (64, 64, 64)  # Gray battle list in the beginning of monster hp bar
     black = (255, 255, 255)  # Black battle list when monster hits us
     green_follow = (104, 246, 104)  # Green color, head left pixel
-    exura_blue = (63, 108, 154)  # Blue color of exura ico in middle
-    white_cap = (192, 192, 192)  # White color of 0 cap in skills tab
+    exura_blue = (63, 108, 154)  # Blue color of exura ico in middle pixel off cd
 
     # end colors
 
-    # stopped = 0
     marker = Coord(0, 0)
     pos = Coord(0, 0)
     saved_pos = Coord(0, 0)
@@ -134,16 +109,6 @@ def hunt_low(starter_mark, max_markers):
 
                     # TODO spells()
 
-                    '''
-                        # Are we moving?
-                        if pos_x == saved_x and pos_y == saved_y:
-                            stopped = stopped + 1
-                            if stopped == 10:
-                                pyautogui.click(pos_x, pos_y)
-                        else:
-                            stopped = 0
-                    '''
-
                 # Are we out of combat?
                 else:
                     # Did we fight before?
@@ -165,7 +130,6 @@ def hunt_low(starter_mark, max_markers):
 
                             # There're monsters nearby!
                             if not (pyautogui.pixelMatchesColor(mob_battle.x, mob_battle.y, gray)):
-
                                 # Hit it!
                                 if attacking == 0:
                                     # Attack!
@@ -181,7 +145,7 @@ def hunt_low(starter_mark, max_markers):
 
                                 # TODO comment this, have no effect. Maybe create func imhit?
                                 # Are we being hit?
-                                elif pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, black):
+                                elif pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, black) and attacking == 0:
 
                                     # Attack!
                                     pyautogui.click(battle_list.x, battle_list.y)
@@ -212,7 +176,6 @@ def hunt_low(starter_mark, max_markers):
                                     memory_debug.write(str(process.memory_info().rss) + "-" + str(starter_mark) + "\n")
 
                             saved_pos = pos
-                            gc.collect()
         except MemoryError:
             '''
             If exception is found, rewrite HuntParam.txt with hunt information, last mark visited and maximum number of 

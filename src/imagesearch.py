@@ -1,14 +1,9 @@
+import random
+import time
+
 import cv2
 import numpy as np
 import pyautogui
-import random
-import time
-import platform
-import subprocess
-
-is_retina = False
-if platform.system() == "Darwin":
-    is_retina = subprocess.call("system_profiler SPDisplaysDataType | grep 'retina'", shell=True)
 
 '''
 
@@ -23,7 +18,6 @@ output : a PIL image of the area selected.
 
 
 def region_grabber(region):
-    if is_retina: region = [n * 2 for n in region]
     x1 = region[0]
     y1 = region[1]
     width = region[2] - x1
@@ -55,8 +49,6 @@ the top left corner coordinates of the element if found as an array [x,y] or [-1
 def imagesearcharea(image, x1, y1, x2, y2, precision=0.8, im=None):
     if im is None:
         im = region_grabber(region=(x1, y1, x2, y2))
-        if is_retina:
-            im.thumbnail((round(im.size[0] * 0.5), round(im.size[1] * 0.5)))
         # im.save('testarea.png') usefull for debugging purposes, this will save the captured region as "testarea.png"
 
     img_rgb = np.array(im)
@@ -112,8 +104,6 @@ the top left corner coordinates of the element if found as an array [x,y] or [-1
 
 def imagesearch(image, precision=0.8):
     im = pyautogui.screenshot()
-    if is_retina:
-        im.thumbnail((round(im.size[0] * 0.5), round(im.size[1] * 0.5)))
     # im.save('testarea.png') useful for debugging purposes, this will save the captured region as "testarea.png"
     img_rgb = np.array(im)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
@@ -203,39 +193,6 @@ def imagesearch_region_loop(image, timesample, x1, y1, x2, y2, precision=0.8):
         time.sleep(timesample)
         pos = imagesearcharea(image, x1, y1, x2, y2, precision)
     return pos
-
-
-'''
-Searches for an image on the screen and counts the number of occurrences.
-
-input :
-image : path to the target image file (see opencv imread for supported types)
-precision : the higher, the lesser tolerant and fewer false positives are found default is 0.9
-
-returns :
-the number of times a given image appears on the screen.
-optionally an output image with all the occurances boxed with a red outline.
-
-'''
-
-
-def imagesearch_count(image, precision=0.9):
-    img_rgb = pyautogui.screenshot()
-    if is_retina:
-        img_rgb.thumbnail((round(img_rgb.size[0] * 0.5), round(img_rgb.size[1] * 0.5)))
-    img_rgb = np.array(img_rgb)
-    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    template = cv2.imread(image, 0)
-    w, h = template.shape[::-1]
-    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-    loc = np.where(res >= precision)
-    count = 0
-    for pt in zip(*loc[::-1]):  # Swap columns and rows
-        # cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2) // Uncomment to draw boxes around found
-        # occurances
-        count = count + 1
-    # cv2.imwrite('result.png', img_rgb) // Uncomment to write output image with boxes drawn around occurances
-    return count
 
 
 def r(num, rand):

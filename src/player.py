@@ -5,70 +5,124 @@ from imagesearch import imagesearcharea
 
 
 class Player:
+    __fought = bool
     __capacity = int
-    __click_up = int
-    __click_down = int
-    __click_left = int
-    __click_right = int
-
-    __attacking = bool
-    __screenshot = None
-
-    __pos = Coord
-    __last_pos = Coord
+    __up = int
+    __down = int
+    __left = int
+    __right = int
+    __position = Coord
+    __last_position = Coord
 
     @property
-    def pos(self):
-        return self.__pos
+    def position(self):
+        return self.__position
 
-    @pos.setter
-    def pos(self, pos):
-        self.__pos = pos
+    @position.setter
+    def position(self, position):
+        self.__position = position
+
+    @property
+    def up(self):
+        return self.__up
+
+    @up.setter
+    def up(self, up):
+        self.__up = up
+
+    @property
+    def down(self):
+        return self.__down
+
+    @down.setter
+    def down(self, down):
+        self.__down = down
+
+    @property
+    def left(self):
+        return self.__left
+
+    @left.setter
+    def left(self, left):
+        self.__left = left
+
+    @property
+    def right(self):
+        return self.__right
+
+    @right.setter
+    def right(self, right):
+        self.__right = right
+
+    @property
+    def capacity(self):
+        return self.__capacity
+
+    @capacity.setter
+    def capacity(self, capacity):
+        self.__capacity = capacity
+
+    @property
+    def last_position(self):
+        return self.__last_position
+
+    @last_position.setter
+    def last_position(self, last_position):
+        self.__last_position = last_position
+
+    @property
+    def fought(self):
+        return self.__fought
+
+    @fought.setter
+    def fought(self, boolean):
+        self.__fought = boolean
 
     # TODO spells
 
     def __init__(self):
-        self.__click_up = 81
-        self.__click_down = 83
-        self.__click_left = 1805
-        self.__click_right = 1807
-        self.__pos = Coord(None, None)
-        self.__last_pos = Coord(None, None)
+        self.fought = False
+        self.up = 81
+        self.down = 83
+        self.left = 1805
+        self.right = 1807
+        self.position = Coord(None, None)
+        self.last_position = Coord(None, None)
 
     def __str__(self):
-        return "(pos) \n" + str(self.__pos) + '\n' \
-               + "(up) \n" + str(self.__click_up) + '\n' \
-               + "(down) \n" + str(self.__click_down) + '\n' \
-               + "(left) \n" + str(self.__click_left) + '\n' \
-               + "(right) \n" + str(self.__click_right) + '\n' \
-               + "(attacking) \n" + str(self.__attacking) + '\n' \
-               + "(last pos) \n" + str(self.__last_pos) + '\n' \
-               + "(capacity) \n" + str(self.__capacity) + '\n'
+        return "(position) \n" + str(self.position) + '\n' \
+               + "(up) \n" + str(self.up) + '\n' \
+               + "(down) \n" + str(self.down) + '\n' \
+               + "(left) \n" + str(self.left) + '\n' \
+               + "(right) \n" + str(self.right) + '\n' \
+               + "(last position) \n" + str(self.last_position) + '\n' \
+               + "(capacity) \n" + str(self.capacity) + '\n'
 
-    def is_fighting(self, battle_list, red, pink, follow, green_follow):
-        if pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, red) or \
-                pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, pink):
-            self.__attacking = True
-            self.set_follow(follow, green_follow)
+    def is_fighting(self, battle_list, monster, red, pink, gray, follow, green_follow):
+        if pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, red) or pyautogui.pixelMatchesColor(battle_list.x,
+                                                                                                         battle_list.y,
+                                                                                                         pink):
+            self.follow(follow, green_follow)
             return True
         else:
+            self.fight(monster, gray, follow, green_follow)
             return False
 
-    def set_fighting(self, battle_list, follow, green_follow):
-        pyautogui.click(battle_list.x, battle_list.y)
-        pyautogui.moveTo(5, 5)
-
-        self.__attacking = True
-        self.set_follow(follow, green_follow)
+    def fight(self, monster, gray, follow, green_follow):
+        if not pyautogui.pixelMatchesColor(monster.x, monster.y, gray) and self.fought:
+            pyautogui.click(monster.x, monster.y)
+            pyautogui.moveTo(5, 5)
+            self.fought = True
+            self.follow(follow, green_follow)
 
     def are_we_in_map_center(self, mark, map_begin, map_end, markers, starter_mark):
-        if self.__pos.x < self.__click_left or self.__pos.x > self.__click_right \
-                or self.__pos.y < self.__click_up or self.__pos.y > self.__click_down:
+        if self.position.x < self.__left or self.position.x > self.position \
+                or self.position.y < self.__up or self.position.y > self.__down:
             # if self.tibia.char.pos == self.tibia.char.last_pos:
             mark.x, mark.y = imagesearcharea(markers[starter_mark], map_begin.x, map_begin.y, map_end.x, map_end.y)
-            self.__pos.x = map_begin.x + mark.x + 3
-            self.__pos.y = map_begin.y + mark.y + 3
-            pyautogui.click(self.__pos.x, self.__pos.y)
+            self.position.x = map_begin.x + mark.x + 3
+            self.position.y = map_begin.y + mark.y + 3
+            pyautogui.click(self.position.x, self.position.y)
             pyautogui.moveTo(5, 5)
             return True
         else:
@@ -104,11 +158,7 @@ class Player:
         pyautogui.moveTo(5, 5)
 
     @staticmethod
-    def set_follow(follow, green_follow):
+    def follow(follow, green_follow):
         if not pyautogui.pixelMatchesColor(follow.x, follow.y, green_follow):
             pyautogui.click(follow.x, follow.y)
             pyautogui.moveTo(5, 5)
-
-    def set_pos(self, x, y):
-        self.__pos.x = x
-        self.__pos.y = y

@@ -2,13 +2,11 @@ class Coord:
     __x = int
     __y = int
 
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, pair):
+        self.pair = pair
 
     def __str__(self):
-        return "x: " + str(self.x) + '\n' \
-               + "y: " + str(self.y) + '\n'
+        return "pair: " + str(self.__x) + ", " + str(self.__y) + '\n'
 
     @property
     def x(self):
@@ -25,3 +23,14 @@ class Coord:
     @y.setter
     def y(self, y):
         self.__y = y
+
+    @property
+    def pair(self):
+        return self.__x, self.__y
+
+    @pair.setter
+    def pair(self, pair):
+        try:
+            self.__x, self.__y = pair
+        except ValueError:
+            raise ValueError("Pass an iterable with two items")

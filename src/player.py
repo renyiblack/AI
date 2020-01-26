@@ -1,5 +1,8 @@
+import time
+
 import pyautogui
 
+from colors import Colors
 from coord import Coord
 from imagesearch import imagesearcharea
 
@@ -86,8 +89,8 @@ class Player:
         self.down = 83
         self.left = 1805
         self.right = 1807
-        self.position = Coord(None, None)
-        self.last_position = Coord(None, None)
+        self.position = Coord([-1, -1])
+        self.last_position = Coord([-1, -1])
 
     def __str__(self):
         return "(position) \n" + str(self.position) + '\n' \
@@ -98,22 +101,21 @@ class Player:
                + "(last position) \n" + str(self.last_position) + '\n' \
                + "(capacity) \n" + str(self.capacity) + '\n'
 
-    def is_fighting(self, battle_list, monster, red, pink, gray, follow, green_follow):
-        if pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, red) or pyautogui.pixelMatchesColor(battle_list.x,
-                                                                                                         battle_list.y,
-                                                                                                         pink):
-            self.follow(follow, green_follow)
+    def is_fighting(self, battle_list, monster, follow):
+        if pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, Colors.red, ) or \
+                pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, Colors.pink, ):
+            self.follow(follow, Colors.green_follow)
             return True
         else:
-            self.fight(monster, gray, follow, green_follow)
+            self.fight(monster, follow)
             return False
 
-    def fight(self, monster, gray, follow, green_follow):
-        if not pyautogui.pixelMatchesColor(monster.x, monster.y, gray) and self.fought:
+    def fight(self, monster, follow):
+        if not pyautogui.pixelMatchesColor(monster.x, monster.y, Colors.gray) and self.fought:
             pyautogui.click(monster.x, monster.y)
             pyautogui.moveTo(5, 5)
             self.fought = True
-            self.follow(follow, green_follow)
+            self.follow(follow, Colors.green_follow)
 
     def are_we_in_map_center(self, mark, map_begin, map_end, markers, starter_mark):
         if self.position.x < self.__left or self.position.x > self.position \
@@ -142,8 +144,10 @@ class Player:
                 pyautogui.press('f2')
                 print(">>> using mana pot...")
 
-    @staticmethod
-    def loot():
+    def loot(self):
+        self.fought = False
+        time.sleep(0.7)
+
         pyautogui.keyDown('shift')
         pyautogui.click(button='right', x=770, y=370)  # down
         pyautogui.click(button='right', x=730, y=370)  # left

@@ -104,6 +104,8 @@ class Player:
     def is_fighting(self, battle_list, monster, follow):
         if pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, Colors.red, ) or \
                 pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, Colors.pink, ):
+            self.fought = True
+
             self.follow(follow, Colors.green_follow)
             return True
         else:
@@ -114,10 +116,9 @@ class Player:
         if not pyautogui.pixelMatchesColor(monster.x, monster.y, Colors.gray) and self.fought:
             pyautogui.click(monster.x, monster.y)
             pyautogui.moveTo(5, 5)
-            self.fought = True
             self.follow(follow, Colors.green_follow)
 
-    def are_we_in_map_center(self, mark, map_begin, map_end, markers, starter_mark):
+    def is_in_mark_center(self, mark, map_begin, map_end, markers, starter_mark):
         if self.position.x < self.__left or self.position.x > self.position \
                 or self.position.y < self.__up or self.position.y > self.__down:
             # if self.tibia.char.pos == self.tibia.char.last_pos:
@@ -128,6 +129,8 @@ class Player:
             pyautogui.moveTo(5, 5)
             return True
         else:
+            pyautogui.click(self.position.x, self.position.y)
+            pyautogui.moveTo(5, 5)
             return False
 
     @staticmethod

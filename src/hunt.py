@@ -4,8 +4,6 @@ import keyboard
 import psutil
 import pyautogui
 
-from coord import Coord
-from imagesearch import imagesearcharea
 from tibia import Tibia
 
 
@@ -41,18 +39,8 @@ def update(tibia):
                 if tibia.starter_mark == tibia.max_markers:
                     tibia.starter_mark = 0
                 else:
-                    # Search for mark on map, returns pos[0,0], needs to sum with original map[0,0]
-                    tibia.mark.pair = imagesearcharea(tibia.markers[tibia.starter_mark],
-                                                      tibia.map_begin.x,
-                                                      tibia.map_begin.y,
-                                                      tibia.map_end.x,
-                                                      tibia.map_end.y)
-
-                    tibia.player.position = Coord(
-                        (tibia.map_begin.x + tibia.mark.x + 3, tibia.map_begin.y + tibia.mark.y + 3))
-
                     if not tibia.player_is_fighting():
-                        if not tibia.are_we_in_map_center():
+                        if not tibia.is_in_mark_center():
                             tibia.starter_mark = tibia.starter_mark + 1
 
                     tibia.player.last_pos = tibia.player.position

@@ -38,10 +38,9 @@ class Tibia:
 
     def __str__(self):
         return "(running)" + '\n' + str(self.__running) + '\n' \
-                                                          "(starter mark)" + '\n' + str(self.__start) + '\n' \
-                                                                                                        "(max markers)" + '\n' + str(
-            self.__max) + '\n' \
-                          "(current mark)" + '\n' + str(self.__mark) + '\n' \
+               + "(starter mark)" + '\n' + str(self.__start) + '\n' \
+               + "(max markers)" + '\n' + str(self.__max) + '\n' \
+               + "(current mark)" + '\n' + str(self.__mark) + '\n' \
                + "(map begin) \n" + str(self.__map_begin.pair) + '\n' \
                + "(map end) \n" + str(self.__map_end.pair) + '\n' \
                + "(char) \n" + str(self.__player) + '\n' \
@@ -104,5 +103,5 @@ class Tibia:
     def player_is_fighting(self):
         return self.player.is_fighting(self.battle_list, self.monster, self.follow)
 
-    def are_we_in_map_center(self):
-        return self.player.are_we_in_map_center(self.mark, self.map_begin, self.map_end, self.markers, self.starter_mark)
+    def is_in_mark_center(self):
+        return self.player.is_in_mark_center(self.mark, self.map_begin, self.map_end, self.markers, self.starter_mark)

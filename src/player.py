@@ -2,7 +2,7 @@ import time
 
 import pyautogui
 
-from colors import Colors
+from config import Config
 from coord import Coord
 from imagesearch import imagesearcharea
 
@@ -10,10 +10,6 @@ from imagesearch import imagesearcharea
 class Player:
     __fought = bool
     __capacity = int
-    __up = int
-    __down = int
-    __left = int
-    __right = int
     __position = Coord
     __last_position = Coord
 
@@ -24,38 +20,6 @@ class Player:
     @position.setter
     def position(self, position):
         self.__position = position
-
-    @property
-    def up(self):
-        return self.__up
-
-    @up.setter
-    def up(self, up):
-        self.__up = up
-
-    @property
-    def down(self):
-        return self.__down
-
-    @down.setter
-    def down(self, down):
-        self.__down = down
-
-    @property
-    def left(self):
-        return self.__left
-
-    @left.setter
-    def left(self, left):
-        self.__left = left
-
-    @property
-    def right(self):
-        return self.__right
-
-    @right.setter
-    def right(self, right):
-        self.__right = right
 
     @property
     def capacity(self):
@@ -85,46 +49,45 @@ class Player:
 
     def __init__(self):
         self.fought = False
-        self.up = 81
-        self.down = 83
-        self.left = 1805
-        self.right = 1807
         self.position = Coord([-1, -1])
         self.last_position = Coord([-1, -1])
 
     def __str__(self):
         return "(position) \n" + str(self.position) + '\n' \
-               + "(up) \n" + str(self.up) + '\n' \
-               + "(down) \n" + str(self.down) + '\n' \
-               + "(left) \n" + str(self.left) + '\n' \
-               + "(right) \n" + str(self.right) + '\n' \
+               + "(up) \n" + str(Config.up) + '\n' \
+               + "(down) \n" + str(Config.down) + '\n' \
+               + "(left) \n" + str(Config.left) + '\n' \
+               + "(right) \n" + str(Config.right) + '\n' \
                + "(last position) \n" + str(self.last_position) + '\n' \
                + "(capacity) \n" + str(self.capacity) + '\n'
 
-    def is_fighting(self, battle_list, monster, follow):
-        if pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, Colors.red, ) or \
-                pyautogui.pixelMatchesColor(battle_list.x, battle_list.y, Colors.pink, ):
+    def is_fighting(self):
+        if pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.red, ) or \
+                pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.pink, ):
             self.fought = True
 
-            self.follow(follow, Colors.green_follow)
+            self.follow(Config.follow, Config.green_follow)
             return True
         else:
-            self.fight(monster, follow)
+            self.fight()
             return False
 
-    def fight(self, monster, follow):
-        if not pyautogui.pixelMatchesColor(monster.x, monster.y, Colors.gray) and self.fought:
-            pyautogui.click(monster.x, monster.y)
+    def fight(self):
+        if not pyautogui.pixelMatchesColor(Config.monster.x, Config.monster.y, Config.gray) and self.fought:
+            pyautogui.click(Config.monster.x, Config.monster.y)
             pyautogui.moveTo(5, 5)
-            self.follow(follow, Colors.green_follow)
+            self.follow(Config.follow, Config.green_follow)
 
-    def is_in_mark_center(self, mark, map_begin, map_end, markers, starter_mark):
-        if self.position.x < self.__left or self.position.x > self.position \
-                or self.position.y < self.__up or self.position.y > self.__down:
-            # if self.tibia.char.pos == self.tibia.char.last_pos:
-            mark.x, mark.y = imagesearcharea(markers[starter_mark], map_begin.x, map_begin.y, map_end.x, map_end.y)
-            self.position.x = map_begin.x + mark.x + 3
-            self.position.y = map_begin.y + mark.y + 3
+    def is_in_mark_center(self):
+        if self.position.x < Config.left or self.position.x > Config.right \
+                or self.position.y < Config.up or self.position.y > Config.down:
+            if self.position == self.last_position:
+                Config.mark.x, Config.mark.y = imagesearcharea(Config.markers[Config.starter_mark], Config.map_begin.x,
+                                                               Config.map_begin.y, Config.map_end.x, Config.map_end.y)
+
+            self.position.x = Config.map_begin.x + Config.mark.x + 3
+            self.position.y = Config.map_begin.y + Config.mark.y + 3
+
             pyautogui.click(self.position.x, self.position.y)
             pyautogui.moveTo(5, 5)
             return True
@@ -149,6 +112,7 @@ class Player:
 
     def loot(self):
         self.fought = False
+
         time.sleep(0.7)
 
         pyautogui.keyDown('shift')

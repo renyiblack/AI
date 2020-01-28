@@ -11,6 +11,7 @@ Program made to recognize images and make decision based on them
 * psutil
 * keyboard
 * opencv-python
+* python 3.7
 
 # Running
 

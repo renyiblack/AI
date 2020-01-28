@@ -4,15 +4,16 @@ import keyboard
 import psutil
 import pyautogui
 
+from config import Config
 from tibia import Tibia
 
 
-def hunt(starter_mark, max_markers):
+def hunt():
     pyautogui.PAUSE = 0.000005
     pyautogui.FAILSAFE = False
     pyautogui.click(5, 5)
 
-    tibia = Tibia(starter_mark, max_markers)
+    tibia = Tibia()
 
     memory_debug = open("../txt/memory_debug.txt", "a+")
 
@@ -23,7 +24,7 @@ def hunt(starter_mark, max_markers):
         process(tibia)
         debug(tibia)
 
-        memory_debug.write(str(program.memory_info().rss) + "-" + str(starter_mark) + "\n")
+        memory_debug.write(str(program.memory_info().rss) + "-" + str(Config.starter_mark) + "\n")
 
 
 def update(tibia):
@@ -32,16 +33,16 @@ def update(tibia):
     else:
         # TODO ASYNC
         print(tibia)
-        if not tibia.player_is_fighting():
+        if not tibia.player.is_fighting():
             if tibia.player.fought:
                 tibia.player.loot()
             else:
-                if tibia.starter_mark == tibia.max_markers:
-                    tibia.starter_mark = 0
+                if Config.starter_mark == Config.max_markers:
+                    Config.starter_mark = 0
                 else:
-                    if not tibia.player_is_fighting():
-                        if not tibia.is_in_mark_center():
-                            tibia.starter_mark = tibia.starter_mark + 1
+                    if not tibia.player.is_fighting():
+                        if not tibia.player.is_in_mark_center():
+                            Config.starter_mark = Config.starter_mark + 1
 
                     tibia.player.last_pos = tibia.player.position
 

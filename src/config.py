@@ -1,7 +1,31 @@
 from coord import Coord
 
 '''
-        describe...
+    markers: path to images used as markers for the bot movement
+    hunt: hunt location
+    
+    red: Red battle list when we're in battle
+    pink: Pink battle list when we're in battle
+    gray: Gray battle list in the beginning of monster hp bar
+    black: Black battle list when monster hits us
+    green_follow: Green color, head, left pixel
+    blue_heal: Blue color of heal in middle right before resetting
+    white_cap: White color of cap in skills tab
+    
+    mark: Mark position on map
+    map_begin: Top left inside map position
+    map_end: Bottom right inside map position
+    battle_list: Battle list top left inside position
+    monster: Monster position in battle list
+    follow: Top left(head) position of follow icon
+    heal: Heal position right after cool down ends
+    
+    starter_mark: Marker where the route starts
+    max_markers: Maximum numbers of marks
+    up: Pixel above white cross center on map
+    down: Pixel bellow white cross center on map
+    left: Pixel left of white cross center on map
+    right: Pixel right of white cross center on map
 '''
 
 
@@ -15,7 +39,7 @@ class Config:
                '../img/markers/marker19.png', '../img/markers/marker20.png']
     hunt = "hunt"
 
-    red = (255, 0, 0)  # Red battle list when we're in battle
+    red = (255, 0, 0)
     pink = (255, 128, 128)  # Pink battle list when we're in battle
     gray = (75, 75, 75)  # Gray battle list in the beginning of monster hp bar
     black = (255, 255, 255)  # Black battle list when monster hits us

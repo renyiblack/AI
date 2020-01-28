@@ -1,9 +1,9 @@
 # AI
-Program made to recognize images and make decision based on them
+Program made to recognize images or pixels, and make decision based on them
 
 # Important
 
-* Always remember to change params in huntlow.py, heal.py and loot.py to match your actual screen
+* Always remember to change values in <code>src/config.py</code> to match your actual setup
 
 # Dependencies
 
@@ -16,6 +16,7 @@ Program made to recognize images and make decision based on them
 # Running
 
 Assuming you extracted to <code>Home</code> do: 
+
 ```
   cd Home
   cd src
@@ -26,3 +27,4 @@ Assuming you extracted to <code>Home</code> do:
 
 * Victor
 * Thiago
+* Luiz

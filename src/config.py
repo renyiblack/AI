@@ -12,7 +12,6 @@ from coord import Coord
     blue_heal: Blue color of heal in middle right before resetting
     white_cap: White color of cap in skills tab
     
-    mark: Mark position on map
     map_begin: Top left inside map position
     map_end: Bottom right inside map position
     battle_list: Battle list top left inside position
@@ -41,19 +40,18 @@ class Config:
 
     red = (255, 0, 0)
     pink = (255, 128, 128)
-    gray = (75, 75, 75)
+    gray = (64, 64, 64)
     black = (255, 255, 255)
     green_follow = (104, 246, 104)
     blue_heal = (63, 108, 154)
     white_cap = (192, 192, 192)
 
-    mark = Coord([-1, -1])
-    map_begin = Coord([1198, 27])
-    map_end = Coord([1305, 137])
-    battle_list = Coord([1194, 456])
-    monster = Coord([1194, 456])
-    follow = Coord([1350, 170])
-    heal = Coord([459, 587])
+    map_begin = Coord([1752, 27])
+    map_end = Coord([1859, 137])
+    battle_list = Coord([1748, 480])
+    monster = Coord([1770, 495])
+    follow = Coord([1904, 170])
+    heal = Coord([459, 899])  # REDO
 
     starter_mark = 0
     max_markers = 2
@@ -61,3 +59,19 @@ class Config:
     down = 83
     left = 1805
     right = 1807
+
+    left_player = Coord([890, 465])
+    right_player = Coord([130, 465])
+    up_player = Coord([955, 405])
+    down_player = Coord([955, 535])
+    diag_up_left_player = Coord([890, 405])
+    diag_up_right_player = Coord([1020, 405])
+    diag_down_left_player = Coord([890, 535])
+    diag_down_right_player = Coord([1030, 535])
+
+    life_bar_low = Coord([1788, 309])
+    life_low = (241, 97, 97)
+    life_bar_high = Coord([1852, 309])
+    life_high = (241, 97, 97)
+    mana_bar = Coord([1771, 322])
+    mana = (101, 98, 240)

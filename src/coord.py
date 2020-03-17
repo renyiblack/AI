@@ -6,7 +6,7 @@ class Coord:
         self.pair = pair
 
     def __str__(self):
-        return "pair: " + str(self.__x) + ", " + str(self.__y) + '\n'
+        return "Coord: " + str(self.__x) + ", " + str(self.__y) + '\n'
 
     @property
     def x(self):

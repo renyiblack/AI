@@ -6,6 +6,10 @@ from config import Config
 from coord import Coord
 from imagesearch import imagesearcharea
 
+'''
+TODO make actions come from player(bot) class so the character and tibia can communicate
+'''
+
 
 class Player:
     __fought = bool
@@ -63,25 +67,25 @@ class Player:
                + "(capacity) \n" + str(self.capacity) + '\n'
 
     def is_fighting(self):
-        if pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.red, ) or \
-                pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.pink, ):
+        print(Config.battle_list)
+        if pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.red) or \
+                pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.pink):
             self.fought = True
 
             self.follow(Config.follow, Config.green_follow)
             return True
-        else:
-            if not pyautogui.pixelMatchesColor(Config.monster.x, Config.monster.y, Config.gray) and not self.fought:
-                pyautogui.click(Config.monster.x, Config.monster.y)
-                pyautogui.moveTo(5, 5)
-                self.follow(Config.follow, Config.green_follow)
+        elif not pyautogui.pixelMatchesColor(Config.monster.x, Config.monster.y, Config.gray) and not self.fought:
+            pyautogui.click(Config.monster.x, Config.monster.y)
+            pyautogui.moveTo(5, 5)
+            self.follow(Config.follow, Config.green_follow)
             return False
 
     def is_in_mark_center(self, mark, starter_mark):
         if self.position.x < Config.left or self.position.x > Config.right \
                 or self.position.y < Config.up or self.position.y > Config.down:
-            if self.position == self.last_position:
-                mark.x, mark.y = imagesearcharea(Config.markers[starter_mark], Config.map_begin.x,
-                                                 Config.map_begin.y, Config.map_end.x, Config.map_end.y)
+            # if self.position == self.last_position:
+            mark.x, mark.y = imagesearcharea(Config.markers[starter_mark], Config.map_begin.x,
+                                             Config.map_begin.y, Config.map_end.x, Config.map_end.y)
 
             self.position.x = Config.map_begin.x + mark.x + 3
             self.position.y = Config.map_begin.y + mark.y + 3
@@ -96,32 +100,27 @@ class Player:
 
     @staticmethod
     def heal():
-        # TODO REDO
-        if not (pyautogui.pixelMatchesColor(1237, 310, (255, 113, 113))):  # life bar(status) ~30%
+        if not (pyautogui.pixelMatchesColor(Config.life_bar_low.x, Config.life_bar_low.y, Config.life_low)):
             pyautogui.press('f1')
-            print(">>> using life pot...")
         else:
-            if not (pyautogui.pixelMatchesColor(1295, 310, (255, 113, 113))):  # life bar(status) ~80%
+            if not (pyautogui.pixelMatchesColor(Config.life_bar_high.x, Config.life_bar_high.y, Config.life_high)):
                 pyautogui.press('f3')
-                print(">>> healing...")
-            if not (pyautogui.pixelMatchesColor(1260, 323, (116, 113, 255))):  # mana bar(status) 30%
+            if not (pyautogui.pixelMatchesColor(Config.mana_bar.x, Config.mana_bar.y, Config.mana)):
                 pyautogui.press('f2')
-                print(">>> using mana pot...")
 
     def loot(self):
         self.fought = False
-
         time.sleep(0.7)
 
         pyautogui.keyDown('shift')
-        pyautogui.click(button='right', x=Config.down_player.x, y=Config.down_player.y)  # down
-        pyautogui.click(button='right', x=Config.diag_down_left_player.x, y=Config.diag_down_left_player.y)  # left
-        pyautogui.click(button='right', x=Config.left.x, y=Config.left.y)  # up
-        pyautogui.click(button='right', x=Config.diag_up_left_player.x, y=Config.diag_up_left_player.y)  # up
-        pyautogui.click(button='right', x=Config.up.x, y=Config.up.y)  # right
-        pyautogui.click(button='right', x=Config.diag_up_right_player.x, y=Config.diag_down_right_player.y)  # right
-        pyautogui.click(button='right', x=Config.right.x, y=Config.right.y)  # down
-        pyautogui.click(button='right', x=Config.diag_down_right_player.x, y=Config.diag_down_right_player.y)  # down
+        pyautogui.click(button='right', x=Config.down_player.x, y=Config.down_player.y)
+        pyautogui.click(button='right', x=Config.diag_down_left_player.x, y=Config.diag_down_left_player.y)
+        pyautogui.click(button='right', x=Config.left_player.x, y=Config.left_player.y)
+        pyautogui.click(button='right', x=Config.diag_up_left_player.x, y=Config.diag_up_left_player.y)
+        pyautogui.click(button='right', x=Config.up_player.x, y=Config.up_player.y)
+        pyautogui.click(button='right', x=Config.diag_up_right_player.x, y=Config.diag_down_right_player.y)
+        pyautogui.click(button='right', x=Config.right_player.x, y=Config.right_player.y)
+        pyautogui.click(button='right', x=Config.diag_down_right_player.x, y=Config.diag_down_right_player.y)
         pyautogui.keyUp('shift')
 
         pyautogui.moveTo(5, 5)

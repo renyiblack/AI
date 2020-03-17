@@ -9,8 +9,7 @@ from tibia import Tibia
 
 
 def hunt():
-    pyautogui.PAUSE = 0.000005
-    pyautogui.FAILSAFE = False
+    pyautogui.PAUSE = 0.1
     pyautogui.click(5, 5)
 
     tibia = Tibia()
@@ -20,35 +19,27 @@ def hunt():
     while tibia.running:
         program = psutil.Process(os.getpid())
 
-        update(tibia)
-        process(tibia)
+        run(tibia)
         debug(tibia)
 
         memory_debug.write(str(program.memory_info().rss) + "-" + str(Config.starter_mark) + "\n")
 
 
-def update(tibia):
+def run(tibia):
     if keyboard.is_pressed('q'):
         tibia.running = False
     else:
         # TODO ASYNC
-        print(tibia)
         if not tibia.player.is_fighting():
             if tibia.player.fought:
                 tibia.player.loot()
             else:
-                if Config.starter_mark == Config.max_markers:
-                    Config.starter_mark = 0
-                else:
-                    if not tibia.player.is_fighting():
-                        if not tibia.player.is_in_mark_center():
-                            Config.starter_mark = Config.starter_mark + 1
+                if tibia.starter_mark == tibia.max_markers:
+                    tibia.starter_mark = 0
+                elif tibia.player_is_in_mark_center():
+                    tibia.starter_mark = tibia.starter_mark + 1
 
-                    tibia.player.last_pos = tibia.player.position
-
-
-def process(tibia):
-    pass
+                tibia.player.last_position = tibia.player.position
 
 
 def debug(tibia):

@@ -1,10 +1,13 @@
-from config import Config
-from hunt import hunt
+import config
+import hunt
+import coxinha
 
 
 def main():
-    if Config.hunt.lower() == "hunt":
-        hunt()
+    cox = coxinha.Coxinha()
+
+    if config.Config.hunt.lower() == "hunt":
+        hunt.hunt()
     else:
         print(">>> Hunt not defined!")
 

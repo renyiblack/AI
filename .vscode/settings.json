@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "C:\\Users\\victor\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "python.formatting.yapfArgs": [" — style","{based_on_style: pep8, indent_width: 4}"]
+}

@@ -1,5 +1,7 @@
-from coord import Coord
-
+import pywinauto
+import pyautogui
+import keyboard
+import time
 '''
     markers: path to images used as markers for the bot movement
     hunt: hunt location
@@ -26,52 +28,66 @@ from coord import Coord
     left: Pixel left of white cross center on map
     right: Pixel right of white cross center on map
 '''
+markers = [
+    '../img/markers/marker1.png', '../img/markers/marker2.png',
+    '../img/markers/marker3.png', '../img/markers/marker4.png',
+    '../img/markers/marker5.png', '../img/markers/marker6.png',
+    '../img/markers/marker7.png', '../img/markers/marker8.png',
+    '../img/markers/marker9.png', '../img/markers/marker10.png',
+    '../img/markers/marker11.png', '../img/markers/marker12.png',
+    '../img/markers/marker13.png', '../img/markers/marker14.png',
+    '../img/markers/marker15.png', '../img/markers/marker16.png',
+    '../img/markers/marker17.png', '../img/markers/marker18.png',
+    '../img/markers/marker19.png', '../img/markers/marker20.png'
+]
+hunt = "hunt"
 
+pyautogui.PAUSE = 0.00005
+pyautogui.moveTo(5, 5)
 
-class Config:
-    markers = ['../img/markers/marker1.png', '../img/markers/marker2.png', '../img/markers/marker3.png',
-               '../img/markers/marker4.png', '../img/markers/marker5.png', '../img/markers/marker6.png',
-               '../img/markers/marker7.png', '../img/markers/marker8.png', '../img/markers/marker9.png',
-               '../img/markers/marker10.png', '../img/markers/marker11.png', '../img/markers/marker12.png',
-               '../img/markers/marker13.png', '../img/markers/marker14.png', '../img/markers/marker15.png',
-               '../img/markers/marker16.png', '../img/markers/marker17.png', '../img/markers/marker18.png',
-               '../img/markers/marker19.png', '../img/markers/marker20.png']
-    hunt = "hunt"
+red = (255, 0, 0)
+pink = (255, 128, 128)
+gray = (64, 64, 64)
+black = (255, 255, 255)
+green_follow = (104, 246, 104)
+blue_heal = (63, 108, 154)
+white_cap = (192, 192, 192)
+life_low = (241, 97, 97)
+life_high = (241, 97, 97)
+mana = (101, 98, 240)
 
-    red = (255, 0, 0)
-    pink = (255, 128, 128)
-    gray = (64, 64, 64)
-    black = (255, 255, 255)
-    green_follow = (104, 246, 104)
-    blue_heal = (63, 108, 154)
-    white_cap = (192, 192, 192)
+map_begin = (1752, 4)
+map_end = (1859, 114)
+battle_list = (1748, 457)
+monster = (1770, 472)
+follow = (1904, 147)
+heal = (458, 898)  # REDO, it's wrong
 
-    map_begin = Coord([1752, 27])
-    map_end = Coord([1859, 137])
-    battle_list = Coord([1748, 480])
-    monster = Coord([1770, 495])
-    follow = Coord([1904, 170])
-    heal = Coord([459, 899])  # REDO
+starter_mark = 0
+max_markers = 2
+up = 58
+down = 60
+left = 1804
+right = 1806
 
-    starter_mark = 0
-    max_markers = 2
-    up = 81
-    down = 83
-    left = 1805
-    right = 1807
+left_player = (880, 486)
+right_player = (1010, 486)
+up_player = (960, 415)
+down_player = (960, 540)
+diag_up_left_player = (880, 415)
+diag_up_right_player = (1010, 415)
+diag_down_left_player = (880, 540)
+diag_down_right_player = (1010, 540)
 
-    left_player = Coord([890, 465])
-    right_player = Coord([130, 465])
-    up_player = Coord([955, 405])
-    down_player = Coord([955, 535])
-    diag_up_left_player = Coord([890, 405])
-    diag_up_right_player = Coord([1020, 405])
-    diag_down_left_player = Coord([890, 535])
-    diag_down_right_player = Coord([1030, 535])
+life_bar_low = (1776, 286)
+life_bar_high = (1822, 286)
+mana_bar = (1776, 299)
 
-    life_bar_low = Coord([1788, 309])
-    life_low = (241, 97, 97)
-    life_bar_high = Coord([1852, 309])
-    life_high = (241, 97, 97)
-    mana_bar = Coord([1771, 322])
-    mana = (101, 98, 240)
+# Change Blacknin to your character name
+tibia = pywinauto.Application().connect(title="Tibia - Blacknin")
+tibia_dialogs = tibia.windows()
+obs = pywinauto.Application().connect(title="Windowed Projector (Preview)")
+obs.WindowedProjector.minimize()
+obs.WindowedProjector.maximize()
+tibia.TibiaBlacknin.minimize()
+tibia.TibiaBlacknin.maximize()

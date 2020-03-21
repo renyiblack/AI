@@ -2,28 +2,14 @@ import time
 
 import pyautogui
 
-from config import Config
-from coord import Coord
-from imagesearch import imagesearcharea
-
-'''
-TODO make actions come from player(bot) class so the character and tibia can communicate
-'''
+import config
+import imagesearch
+import pywinauto
 
 
-class Player:
+class Character:
     __fought = bool
     __capacity = int
-    __position = Coord
-    __last_position = Coord
-
-    @property
-    def position(self):
-        return self.__position
-
-    @position.setter
-    def position(self, position):
-        self.__position = position
 
     @property
     def capacity(self):
@@ -34,99 +20,106 @@ class Player:
         self.__capacity = capacity
 
     @property
-    def last_position(self):
-        return self.__last_position
-
-    @last_position.setter
-    def last_position(self, last_position):
-        self.__last_position = last_position
-
-    @property
     def fought(self):
         return self.__fought
-
-    @fought.setter
-    def fought(self, boolean):
-        self.__fought = boolean
 
     # TODO spells
 
     def __init__(self):
-        self.fought = False
+        self.__fought = False
         self.capacity = 999
-        self.position = Coord([-1, -1])
-        self.last_position = Coord([-1, -1])
 
     def __str__(self):
-        return "(position) \n" + str(self.position) + '\n' \
-               + "(up) \n" + str(Config.up) + '\n' \
-               + "(down) \n" + str(Config.down) + '\n' \
-               + "(left) \n" + str(Config.left) + '\n' \
-               + "(right) \n" + str(Config.right) + '\n' \
-               + "(last position) \n" + str(self.last_position) + '\n' \
-               + "(capacity) \n" + str(self.capacity) + '\n'
+        return "(fought) \n{fought}\n" \
+               + "(capacity) \n{capacity}\n"
 
-    def is_fighting(self):
-        print(Config.battle_list)
-        if pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.red) or \
-                pyautogui.pixelMatchesColor(Config.battle_list.x, Config.battle_list.y, Config.pink):
-            self.fought = True
+    def is_fighting(self, tibia, dialogs):
+        if pyautogui.pixelMatchesColor(config.battle_list[0], config.battle_list[1], config.red) or \
+                pyautogui.pixelMatchesColor(config.battle_list[0], config.battle_list[1], config.pink):
 
-            self.follow(Config.follow, Config.green_follow)
+            self.__fought = True
+            self.follow(config.follow, config.green_follow, tibia, dialogs)
             return True
-        elif not pyautogui.pixelMatchesColor(Config.monster.x, Config.monster.y, Config.gray) and not self.fought:
-            pyautogui.click(Config.monster.x, Config.monster.y)
-            pyautogui.moveTo(5, 5)
-            self.follow(Config.follow, Config.green_follow)
+        elif not pyautogui.pixelMatchesColor(config.monster[0],
+                                             config.monster[1],
+                                             config.gray) and not self.fought:
+
+            print("to indo bater coroi")
+            tibia[dialogs[0]].click(coords=(config.monster[0],
+                                            config.monster[1]))
+            time.sleep(0.05)
+            pyautogui.moveTo(0, 0)
+            self.follow(config.follow, config.green_follow, tibia, dialogs)
             return False
 
-    def is_in_mark_center(self, mark, starter_mark):
-        if self.position.x < Config.left or self.position.x > Config.right \
-                or self.position.y < Config.up or self.position.y > Config.down:
-            # if self.position == self.last_position:
-            mark.x, mark.y = imagesearcharea(Config.markers[starter_mark], Config.map_begin.x,
-                                             Config.map_begin.y, Config.map_end.x, Config.map_end.y)
+    def is_in_mark_center(self, starter_mark, tibia, dialogs):
 
-            self.position.x = Config.map_begin.x + mark.x + 3
-            self.position.y = Config.map_begin.y + mark.y + 3
+        mark = imagesearch.imagesearcharea(
+            config.markers[starter_mark], config.map_begin[0],
+            config.map_begin[1], config.map_end[0], config.map_end[1])
 
-            pyautogui.click(self.position.x, self.position.y)
-            pyautogui.moveTo(5, 5)
+        x = (config.map_begin[0] + mark[0] + 3)
+        y = (config.map_begin[1] + mark[1] + 3)
+
+        mark = (x, y)
+
+        print(f"mark - {mark}")
+        print(f"left - {config.left}")
+        print(f"right - {config.right}")
+        print(f"up - {config.up}")
+        print(f"down - {config.down}")
+
+        if mark[0] > config.left - 2 and mark[0] < config.right + 2 \
+                and mark[1] > config.up - 2 and mark[1] < config.down + 2:
+            print("yo")
             return True
         else:
-            pyautogui.click(self.position.x, self.position.y)
+            tibia[dialogs[0]].click(coords=(mark[0], mark[1]))
             pyautogui.moveTo(5, 5)
             return False
 
-    @staticmethod
-    def heal():
-        if not (pyautogui.pixelMatchesColor(Config.life_bar_low.x, Config.life_bar_low.y, Config.life_low)):
-            pyautogui.press('f1')
-        else:
-            if not (pyautogui.pixelMatchesColor(Config.life_bar_high.x, Config.life_bar_high.y, Config.life_high)):
-                pyautogui.press('f3')
-            if not (pyautogui.pixelMatchesColor(Config.mana_bar.x, Config.mana_bar.y, Config.mana)):
-                pyautogui.press('f2')
+    def loot(self, tibia, dialogs, obs):
+        self.__fought = False
 
-    def loot(self):
-        self.fought = False
         time.sleep(0.7)
 
+        print("looteando")
+
+        tibia[dialogs[0]].maximize()
+        time.sleep(0.05)
         pyautogui.keyDown('shift')
-        pyautogui.click(button='right', x=Config.down_player.x, y=Config.down_player.y)
-        pyautogui.click(button='right', x=Config.diag_down_left_player.x, y=Config.diag_down_left_player.y)
-        pyautogui.click(button='right', x=Config.left_player.x, y=Config.left_player.y)
-        pyautogui.click(button='right', x=Config.diag_up_left_player.x, y=Config.diag_up_left_player.y)
-        pyautogui.click(button='right', x=Config.up_player.x, y=Config.up_player.y)
-        pyautogui.click(button='right', x=Config.diag_up_right_player.x, y=Config.diag_down_right_player.y)
-        pyautogui.click(button='right', x=Config.right_player.x, y=Config.right_player.y)
-        pyautogui.click(button='right', x=Config.diag_down_right_player.x, y=Config.diag_down_right_player.y)
+        pyautogui.click(button='right', x=config.down_player[0],
+                        y=config.down_player[1])
+        pyautogui.click(button='right',
+                        x=config.diag_down_left_player[0],
+                        y=config.diag_down_left_player[1])
+        pyautogui.click(button='right',
+                        x=config.left_player[0],
+                        y=config.left_player[1])
+        pyautogui.click(button='right',
+                        x=config.diag_up_left_player[0],
+                        y=config.diag_up_left_player[1])
+        pyautogui.click(button='right',
+                        x=config.up_player[0],
+                        y=config.up_player[1])
+        pyautogui.click(button='right',
+                        x=config.diag_up_right_player[0],
+                        y=config.diag_down_right_player[1])
+        pyautogui.click(button='right',
+                        x=config.right_player[0],
+                        y=config.right_player[1])
+        pyautogui.click(button='right',
+                        x=config.diag_down_right_player[0],
+                        y=config.diag_down_right_player[1])
         pyautogui.keyUp('shift')
+        obs.WindowedProjector.minimize()
+        obs.WindowedProjector.maximize()
+        time.sleep(0.2)
 
         pyautogui.moveTo(5, 5)
 
     @staticmethod
-    def follow(follow, green_follow):
-        if not pyautogui.pixelMatchesColor(follow.x, follow.y, green_follow):
-            pyautogui.click(follow.x, follow.y)
+    def follow(follow, green_follow, tibia, dialogs):
+        if not pyautogui.pixelMatchesColor(follow[0], follow[1], green_follow):
+            tibia[dialogs[0]].click(coords=(follow[0], follow[1]))
             pyautogui.moveTo(5, 5)

@@ -2,31 +2,11 @@ import pywinauto
 import pyautogui
 import keyboard
 import time
+import re
+import imagesearch
+
 '''
     markers: path to images used as markers for the bot movement
-    hunt: hunt location
-    
-    red: Red battle list when we're in battle
-    pink: Pink battle list when we're in battle
-    gray: Gray battle list in the beginning of monster hp bar
-    black: Black battle list when monster hits us
-    green_follow: Green color, head, left pixel
-    blue_heal: Blue color of heal in middle right before resetting
-    white_cap: White color of cap in skills tab
-    
-    map_begin: Top left inside map position
-    map_end: Bottom right inside map position
-    battle_list: Battle list top left inside position
-    monster: Monster position in battle list
-    follow: Top left(head) position of follow icon
-    heal: Heal position right after cool down ends
-    
-    starter_mark: Marker where the route starts
-    max_markers: Maximum numbers of marks
-    up: Pixel above white cross center on map
-    down: Pixel bellow white cross center on map
-    left: Pixel left of white cross center on map
-    right: Pixel right of white cross center on map
 '''
 markers = [
     '../img/markers/marker1.png', '../img/markers/marker2.png',
@@ -40,54 +20,105 @@ markers = [
     '../img/markers/marker17.png', '../img/markers/marker18.png',
     '../img/markers/marker19.png', '../img/markers/marker20.png'
 ]
+
+'''
+    hunt: hunt location
+'''
 hunt = "hunt"
 
-pyautogui.PAUSE = 0.00005
-pyautogui.moveTo(5, 5)
+'''
+    Pyautogui config
+    starter_mark: Starter mark
+    max_markers: Max markers
+'''
+pyautogui.PAUSE = 0.005
+pyautogui.FAILSAFE = False
 
+pyautogui.click(x=5, y=5)
+
+starter_mark = 0
+max_markers = 3
+
+'''
+    Colors
+
+    red: Red battle list when we're in battle
+    pink: Pink battle list when we're in battle
+    gray: Gray battle list in the beginning of monster hp bar
+    green_follow: Green color, head, left pixel
+    blue_heal: Blue color of heal in middle right before resetting
+    white_cap: White color of cap in skills tab
+    life: Life color in 4 bar
+    mana: Mana color in 4 bar
+'''
 red = (255, 0, 0)
 pink = (255, 128, 128)
 gray = (64, 64, 64)
-black = (255, 255, 255)
 green_follow = (104, 246, 104)
 blue_heal = (63, 108, 154)
 white_cap = (192, 192, 192)
-life_low = (241, 97, 97)
-life_high = (241, 97, 97)
+life = (241, 97, 97)
 mana = (101, 98, 240)
 
-map_begin = (1752, 4)
-map_end = (1859, 114)
-battle_list = (1748, 457)
-monster = (1770, 472)
-follow = (1904, 147)
+'''
+    map_begin: Upper left corner inside map
+    map_end: Botton right corner inside map
+    battle_list: Upper left corner inside battle list
+    monster: Upper left corner of monster life bar inside battle list
+    heal: Upper middle coord of heal hotkey
+    follow: Upper left coord inside head
+'''
+x, y = imagesearch.imagesearch("../img/map/map.png")
+map_begin = (x - 118, y - 18)
+map_end = (x - 13, y + 90)
+
+x, y = imagesearch.imagesearch("../img/battle_list/battle_list.png")
+battle_list = (x + 4, y + 15)
+monster = (x + 26, y + 30)
+
+x, y = imagesearch.imagesearch("../img/follow/follow.png")
+follow = (x + 12, y + 5)
 heal = (458, 898)  # REDO, it's wrong
 
-starter_mark = 0
-max_markers = 2
-up = 58
-down = 60
-left = 1804
-right = 1806
+'''
+    up: 1 pixel above center of white cross on map
+    down: 1 pixel bellow center of white cross on map
+    left: 1 pixel to the left of center of white cross on map
+    right: 1 pixel to the right of center of white cross on map
+'''
+up = map_begin[1] + 53
+down = map_begin[1] + 55
+left = map_begin[0] + 52
+right = map_begin[0] + 54
 
-left_player = (880, 486)
-right_player = (1010, 486)
-up_player = (960, 415)
-down_player = (960, 540)
-diag_up_left_player = (880, 415)
-diag_up_right_player = (1010, 415)
-diag_down_left_player = (880, 540)
-diag_down_right_player = (1010, 540)
 
-life_bar_low = (1776, 286)
-life_bar_high = (1822, 286)
-mana_bar = (1776, 299)
+'''
+    Sqms around character
+'''
+x, y = imagesearch.imagesearch("../img/character/character_life.png")
 
-# Change Blacknin to your character name
-tibia = pywinauto.Application().connect(title="Tibia - Blacknin")
+left_player = (x - 50, y + 92)
+right_player = (x + 167, y + 92)
+up_player = (x + 87, y - 23)
+down_player = (x + 87, y + 150)
+diag_up_left_player = (x - 50, y - 23)
+diag_up_right_player = (x + 167, y - 23)
+diag_down_left_player = (x - 50, y + 150)
+diag_down_right_player = (x + 167, y + 150)
+
+'''
+    life_bar_low: Close to death
+    life_bar_high: Quite safe
+    mana_bar: When to drink
+
+    4th line from bottom to top
+'''
+x, y = imagesearch.imagesearch("../img/status/status.png")
+
+life_bar_low = (x + 23, y + 7)
+life_bar_high = (x + 88, y + 7)
+mana_bar = (x + 23, y + 20)
+
+tibia = pywinauto.Application().connect(path='Xming')
 tibia_dialogs = tibia.windows()
-obs = pywinauto.Application().connect(title="Windowed Projector (Preview)")
-obs.WindowedProjector.minimize()
-obs.WindowedProjector.maximize()
-tibia.TibiaBlacknin.minimize()
-tibia.TibiaBlacknin.maximize()
+xming = re.split(r"'", str(tibia_dialogs[0]))

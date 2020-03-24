@@ -22,22 +22,17 @@ markers = [
 ]
 
 '''
-    hunt: hunt location
-'''
-hunt = "hunt"
-
-'''
     Pyautogui config
     starter_mark: Starter mark
     max_markers: Max markers
 '''
-pyautogui.PAUSE = 0.0005
+pyautogui.PAUSE = 0.05
 pyautogui.FAILSAFE = False
 
 pyautogui.moveTo(x=5, y=5)
 
 starter_mark = 0
-max_markers = 3
+max_markers = 6
 
 '''
     Colors
@@ -115,9 +110,9 @@ diag_down_right_player = (x + 108, y + 131)
 '''
 x, y = imagesearch.imagesearch("../img/status/status.png")
 
-life_bar_low = (x + 23, y + 7)
-life_bar_high = (x + 88, y + 7)
-mana_bar = (x + 23, y + 20)
+life_bar_low = (x + 23, y + 6)
+life_bar_high = (x + 97, y + 6)
+mana_bar = (x + 23, y + 19)
 
 tibia = pywinauto.Application().connect(path='Xming')
 tibia_dialogs = tibia.windows()

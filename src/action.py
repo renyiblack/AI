@@ -3,6 +3,7 @@ import config
 import imagesearch
 import pyautogui
 import time
+import pywinauto
 
 
 class Action(threading.Thread):
@@ -12,17 +13,20 @@ class Action(threading.Thread):
         self.fought = False
 
     def run(self):
+
         while(True):
             # Are we fighting?
             if self.is_fighting():
                 self.fought = True
             elif self.do_we_fight():
-                self.click(config.monster)
+                pyautogui.click(x=config.monster[0], y=config.monster[1])
             else:
                 # Did we fight?
                 if self.fought:
                     # Yes, loot
                     self.loot()
+                    # We didn't fight this turn, we RICH BABY
+                    self.fought = False
                 else:
                     # No, did we reach end of the path?
                     if config.starter_mark == config.max_markers:
@@ -34,12 +38,6 @@ class Action(threading.Thread):
 
             # Check if we are following
             self.follow()
-
-    def click(self, coord):
-        pyautogui.moveTo(coord)
-        pyautogui.click()
-        pyautogui.moveTo(5, 5)
-        time.sleep(0.1)
 
     def is_fighting(self):
         # Is player in combat?
@@ -80,19 +78,17 @@ class Action(threading.Thread):
         mark = (x, y)
 
         # Is player in mark center?
-        if mark[0] > config.left - 2 and mark[0] < config.right + 2 \
-                and mark[1] > config.up - 2 and mark[1] < config.down + 2:
+        if mark[0] > config.left - 3 and mark[0] < config.right + 3 \
+                and mark[1] > config.up - 3 and mark[1] < config.down + 3:
             # Yes, go to next mark
             config.starter_mark = config.starter_mark + 1
         else:
             # No, click on mark
-            self.click(mark)
+            pyautogui.click(x=mark[0], y=mark[1])
 
-    def loot(self):
+    @staticmethod
+    def loot():
         print("LOOT!")
-        # We didn't fight this turn, we RICH BABY
-        self.fought = False
-
 
         # Time to low level player get closer to mob dead body
         time.sleep(0.5)
@@ -121,11 +117,9 @@ class Action(threading.Thread):
 
         config.tibia[config.xming[1]].type_keys('{VK_SHIFT up}')
 
-        pyautogui.moveTo(5, 5)
-
-    def follow(self):
+    @staticmethod
+    def follow():
         # Are we not following?
         if not pyautogui.pixelMatchesColor(config.follow[0], config.follow[1], config.green_follow):
             # FOLLOW!
             pyautogui.click(x=config.follow[0], y=config.follow[1])
-            pyautogui.moveTo(5, 5)

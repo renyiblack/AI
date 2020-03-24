@@ -3,11 +3,12 @@ Program made to recognize images or pixels, and make decision based on them
 
 # Important
 
-* Always remember to change values in <code>src/config.py</code> to match your actual setup
+* Always remember to change values in <code>src/config.py</code> to match your actual screen
 
 # Dependencies
 
 * pyautogui
+* pywinauto
 * psutil
 * keyboard
 * opencv-python
@@ -15,13 +16,15 @@ Program made to recognize images or pixels, and make decision based on them
 
 # Running
 
-Assuming you extracted to <code>Home</code> do: 
+Assuming you extracted to <code>Home</code> do:
 
 ```
   cd Home
   cd src
-  py main.src
+  py ai.src
 ```
+
+obs.: This program only works if you're already logged on a character. 
 
 # Authors
 

@@ -31,10 +31,10 @@ hunt = "hunt"
     starter_mark: Starter mark
     max_markers: Max markers
 '''
-pyautogui.PAUSE = 0.005
+pyautogui.PAUSE = 0.0005
 pyautogui.FAILSAFE = False
 
-pyautogui.click(x=5, y=5)
+pyautogui.moveTo(x=5, y=5)
 
 starter_mark = 0
 max_markers = 3
@@ -95,16 +95,16 @@ right = map_begin[0] + 54
 '''
     Sqms around character
 '''
-x, y = imagesearch.imagesearch("../img/character/character_life.png")
+x, y = imagesearch.imagesearch("../img/character/character_mana.png")
 
-left_player = (x - 50, y + 92)
-right_player = (x + 167, y + 92)
-up_player = (x + 87, y - 23)
-down_player = (x + 87, y + 150)
-diag_up_left_player = (x - 50, y - 23)
-diag_up_right_player = (x + 167, y - 23)
-diag_down_left_player = (x - 50, y + 150)
-diag_down_right_player = (x + 167, y + 150)
+left_player = (x - 50, y + 62)
+right_player = (x + 108, y + 62)
+up_player = (x + 31, y - 15)
+down_player = (x + 31, y + 131)
+diag_up_left_player = (x - 50, y - 15)
+diag_up_right_player = (x + 108, y - 15)
+diag_down_left_player = (x - 50, y + 131)
+diag_down_right_player = (x + 108, y + 131)
 
 '''
     life_bar_low: Close to death

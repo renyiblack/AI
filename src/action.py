@@ -102,7 +102,6 @@ class Action(threading.Thread):
         '''
         config.tibia[config.xming[1]].type_keys('{VK_SHIFT down}')
 
-        pyautogui.moveTo(config.down_player)
         pyautogui.click(
             button='right', x=config.down_player[0], y=config.down_player[1])
         pyautogui.click(

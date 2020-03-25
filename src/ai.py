@@ -1,10 +1,7 @@
-import action
 import keyboard
-import pyautogui
 import os
 import psutil
 import sys
-import threading
 import thread_manager
 
 
@@ -12,8 +9,6 @@ class Ai():
     def __init__(self):
         # Set thread, daemon and start
         self.thread_manager = thread_manager.ThreadManager()
-        self.thread_manager.setDaemon = True
-        self.thread_manager.start()
 
     def hunt(self):
         # Quit program on q press

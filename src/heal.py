@@ -3,6 +3,7 @@ import pyautogui
 import config
 import time
 
+#TODO remove sleeps and check CD
 
 class Heal(threading.Thread):
     def run(self):

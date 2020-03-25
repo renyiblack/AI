@@ -12,7 +12,7 @@ Program made to recognize images or pixels, and make decision based on them
 * psutil
 * keyboard
 * opencv-python
-* python 3.7
+* python 3.7.4
 
 # Running
 

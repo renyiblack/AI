@@ -5,6 +5,10 @@ import time
 import re
 import imagesearch
 
+
+time.sleep(0.1)
+
+
 '''
     markers: path to images used as markers for the bot movement
 '''
@@ -32,7 +36,7 @@ pyautogui.FAILSAFE = False
 pyautogui.moveTo(x=5, y=5)
 
 starter_mark = 0
-max_markers = 6
+max_markers = 3
 
 '''
     Colors
@@ -66,6 +70,7 @@ mana = (101, 98, 240)
 x, y = imagesearch.imagesearch("../img/map/map.png")
 map_begin = (x - 118, y - 18)
 map_end = (x - 13, y + 90)
+map_center = ((map_end[0] - map_begin[0])/2 + map_begin[0], (map_end[1] - map_begin[1])/2 + map_begin[1])
 
 x, y = imagesearch.imagesearch("../img/battle_list/battle_list.png")
 battle_list = (x + 4, y + 15)

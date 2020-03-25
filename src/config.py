@@ -30,13 +30,13 @@ markers = [
     starter_mark: Starter mark
     max_markers: Max markers
 '''
-pyautogui.PAUSE = 0.05
+pyautogui.PAUSE = 0.03
 pyautogui.FAILSAFE = False
 
 pyautogui.moveTo(x=5, y=5)
 
 starter_mark = 0
-max_markers = 3
+max_markers = 5
 
 '''
     Colors

@@ -37,4 +37,3 @@ class Action(threading.Thread):
                     else:
                         # No, move
                         coord, count_trapado = player.move(coord, count_trapado)
-                        time.sleep(.5)

@@ -2,6 +2,7 @@ import pyautogui
 import time
 import config
 import imagesearch
+import random
 
 
 def is_fighting():
@@ -37,6 +38,10 @@ def move(coord, count_trapado):
     mark = imagesearch.imagesearcharea(
         config.markers[config.starter_mark], config.map_begin[0], config.map_begin[1], config.map_end[0], config.map_end[1])
 
+    if mark[0] == -1:
+        config.starter_mark += 1
+        return coord, count_trapado
+
     # Adjust x and y to correct positions
     x = (config.map_begin[0] + mark[0] + 3)
     y = (config.map_begin[1] + mark[1] + 3)
@@ -48,7 +53,7 @@ def move(coord, count_trapado):
     if(coord == mark):
         count_trapado += 1
         # If we are for more than N ticks, try to move manually
-        if count_trapado >= 5:
+        if count_trapado >= 10:
             if config.map_center[0] > coord[0]:
                 config.tibia[config.xming[1]].type_keys('{VK_LEFT}')
             elif config.map_center[0] < coord[0]:
@@ -64,8 +69,8 @@ def move(coord, count_trapado):
         return mark, count_trapado
 
     # Is player on mark center?
-    elif mark[0] > config.left - 3 and mark[0] < config.right + 3 \
-            and mark[1] > config.up - 3 and mark[1] < config.down + 3:
+    elif mark[0] > config.left - random.randrange(1, 4) and mark[0] < config.right + random.randrange(1, 4) \
+            and mark[1] > config.up - random.randrange(1, 4) and mark[1] < config.down + random.randrange(1, 4):
         # Yes, go to next mark
         config.starter_mark += 1
         count_trapado = 0

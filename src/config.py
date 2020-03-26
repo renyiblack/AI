@@ -6,8 +6,23 @@ import re
 import imagesearch
 
 
-time.sleep(0.1)
+time.sleep(0.5)
 
+'''
+    Pyautogui config
+    starter_mark: Starter mark
+    max_markers: Max markers
+'''
+pyautogui.PAUSE = 0.03
+pyautogui.FAILSAFE = False
+
+print("----- Initializing markers -----")
+
+starter_mark = 0
+max_markers = 3
+
+print("----- Loading markers -----")
+print("Loading markers from ../img/markers/")
 
 '''
     markers: path to images used as markers for the bot movement
@@ -25,60 +40,125 @@ markers = [
     '../img/markers/marker19.png', '../img/markers/marker20.png'
 ]
 
-'''
-    Pyautogui config
-    starter_mark: Starter mark
-    max_markers: Max markers
-'''
-pyautogui.PAUSE = 0.03
-pyautogui.FAILSAFE = False
+print("----- Getting resolution -----")
 
-pyautogui.moveTo(x=5, y=5)
+resolution = (pyautogui.size()[0] - 1, pyautogui.size()[1] - 1)
+print(f"screen resolution: {resolution}")
 
-starter_mark = 0
-max_markers = 5
+print("----- Loading image references -----")
+
+'''
+    Images locations
+'''
+battle_list_header_img = '../img/battle_list/battle_list_header.png'
+print(f"Loading battle list headar reference from {battle_list_header_img}")
+
+battle_line_red_img = '../img/battle_list/battle_line_red.png'
+print(f"Loading red battle line reference from {battle_line_red_img}")
+
+battle_line_pink_img = '../img/battle_list/battle_line_pink.png'
+print(f"Loading pink battle line reference from {battle_line_pink_img}")
+
+battle_list_button_img = '../img/battle_list/button_down.png'
+print(f"Loading battle list button reference from {battle_list_button_img}")
+
+map_reference_img = '../img/map/map_reference.png'
+print(f"Loading map reference from {map_reference_img}")
+
+follow_toggled_img = '../img/follow/follow_toggled.png'
+print(f"Loading follow toggled reference from {follow_toggled_img}")
+
+follow_untoggled_img = '../img/follow/follow_untoggled.png'
+print(f"Loading follow untoggled reference from {follow_untoggled_img}")
+
+mana_img = '../img/health_mana/mana.png'
+print(f"Loading mana reference from {mana_img}")
+
+health_mana_img = '../img/health_mana/health_mana.png'
+print(f"Loading health and mana reference from {health_mana_img}")
+
+battle_list_img = '../img/battle_list/battle_list.png'
+print(f"Loading battle list reference from {battle_list_img}")
+
+print("----- Colors -----")
 
 '''
     Colors
-
-    red: Red battle list when we're in battle
-    pink: Pink battle list when we're in battle
-    gray: Gray battle list in the beginning of monster hp bar
-    green_follow: Green color, head, left pixel
-    blue_heal: Blue color of heal in middle right before resetting
-    white_cap: White color of cap in skills tab
-    life: Life color in 4 bar
-    mana: Mana color in 4 bar
+    
+    life: Life color in 4th bar from bottom to top in status bar
+    mana: Mana color in 4th bar from bottom to top in status bar
+    green_follow: Green color on follow head at the top right corner
 '''
-red = (255, 0, 0)
-pink = (255, 128, 128)
-gray = (64, 64, 64)
-green_follow = (104, 246, 104)
-blue_heal = (63, 108, 154)
-white_cap = (192, 192, 192)
 life = (241, 97, 97)
+print(f"Life: {life}")
 mana = (101, 98, 240)
+print(f"Mana: {mana}")
+green_follow = (104, 246, 104)
+print(f"Follow: {green_follow}")
+gray_bellow_monster_hp = (64, 64, 64)
+print(f"gray bellow monster hp: {gray_bellow_monster_hp}")
+red_fighting = (255, 0, 0)
+print(f"red fighting: {red_fighting}")
+pink_fighting = (255, 128, 128)
+print(f"pink fighting: {pink_fighting}")
+print(f"red fighting: {red_fighting}")
+black_fighting = (0, 0, 0)
+print(f"black fighting: {black_fighting}")
+
+print("----- Calculating battle list position -----")
+
+'''
+    battle_list_begin: Top left pixel inside battle list
+    battle_list_end: Botton right pixel inside battle list
+    battle_list_monster: Upper left corner of first monster life bar inside battle list
+'''
+x, y = imagesearch.imagesearch(battle_list_header_img)
+
+battle_list_begin = (x+4, y+15)
+battle_list_monster = (battle_list_begin[0]+22, battle_list_begin[1]+15)
+
+x, y = imagesearch.imagesearcharea(battle_list_button_img, battle_list_begin[0], battle_list_begin[1], resolution[0], resolution[1])
+
+x += battle_list_begin[0]
+y += battle_list_begin[1]
+
+battle_list_end = (x - 1, y - 9)
+
+battle_list_monster_offset = 22
+
+print(f"battle list begin: {battle_list_begin}")
+print(f"battle list end: {battle_list_end}")
+print(f"battle list monster: {battle_list_monster}")
+
+print("----- Calculating map and follow position -----")
 
 '''
     map_begin: Upper left corner inside map
     map_end: Botton right corner inside map
-    battle_list: Upper left corner inside battle list
-    monster: Upper left corner of monster life bar inside battle list
     heal: Upper middle coord of heal hotkey
     follow: Upper left coord inside head
 '''
-x, y = imagesearch.imagesearch("../img/map/map.png")
-map_begin = (x - 118, y - 18)
-map_end = (x - 13, y + 90)
-map_center = ((map_end[0] - map_begin[0])/2 + map_begin[0], (map_end[1] - map_begin[1])/2 + map_begin[1])
+x, y = imagesearch.imagesearch(map_reference_img)
 
-x, y = imagesearch.imagesearch("../img/battle_list/battle_list.png")
-battle_list = (x + 4, y + 15)
-monster = (x + 26, y + 30)
+map_begin = (x - 117, y - 90)
+map_end = (x - 12, y + 18)
+map_center = ((map_end[0] - map_begin[0])/2 + map_begin[0],
+              (map_end[1] - map_begin[1])/2 + map_begin[1])
 
-x, y = imagesearch.imagesearch("../img/follow/follow.png")
+x, y = imagesearch.imagesearch(follow_toggled_img)
+
+if x == -1:
+    x, y = imagesearch.imagesearch(follow_untoggled_img)
+
 follow = (x + 12, y + 5)
-heal = (458, 898)  # REDO, it's wrong
+heal = (458, 898)  # TODO REDO, it's wrong
+
+print(f"map begin: {map_begin}")
+print(f"map end: {map_end}")
+print(f"map center: {map_center}")
+print(f"follow: {follow}")
+
+print("----- Calculating player map offset -----")
 
 '''
     up: 1 pixel above center of white cross on map
@@ -86,25 +166,34 @@ heal = (458, 898)  # REDO, it's wrong
     left: 1 pixel to the left of center of white cross on map
     right: 1 pixel to the right of center of white cross on map
 '''
-up = map_begin[1] + 53
-down = map_begin[1] + 55
-left = map_begin[0] + 52
-right = map_begin[0] + 54
+map_center_up = map_begin[1] + 53
+map_center_down = map_begin[1] + 55
+map_center_left = map_begin[0] + 52
+map_center_right = map_begin[0] + 54
 
+print(f"above map center: {map_center_up}")
+print(f"bellow map center: {map_center_down}")
+print(f"left of map center: {map_center_left}")
+print(f"right of map center: {map_center_right}")
+
+print("----- Calculating sqms around player -----")
 
 '''
     Sqms around character
 '''
-x, y = imagesearch.imagesearch("../img/character/character_mana.png")
+x, y = imagesearch.imagesearch(mana_img)
 
 left_player = (x - 50, y + 62)
 right_player = (x + 108, y + 62)
 up_player = (x + 31, y - 15)
 down_player = (x + 31, y + 131)
-diag_up_left_player = (x - 50, y - 15)
-diag_up_right_player = (x + 108, y - 15)
-diag_down_left_player = (x - 50, y + 131)
-diag_down_right_player = (x + 108, y + 131)
+
+print(f"left player: {left_player}")
+print(f"right player: {right_player}")
+print(f"up player: {up_player}")
+print(f"down player: {down_player}")
+
+print("----- Calculating life and mana position -----")
 
 '''
     life_bar_low: Close to death
@@ -113,12 +202,23 @@ diag_down_right_player = (x + 108, y + 131)
 
     4th line from bottom to top
 '''
-x, y = imagesearch.imagesearch("../img/status/status.png")
+x, y = imagesearch.imagesearch(health_mana_img)
 
 life_bar_low = (x + 23, y + 6)
 life_bar_high = (x + 97, y + 6)
 mana_bar = (x + 23, y + 19)
 
+
+print(f"life bar low: {life_bar_low}")
+print(f"life bar high: {life_bar_high}")
+print(f"mana bar: {mana_bar}")
+
+print("----- Connecting to application -----")
+
 tibia = pywinauto.Application().connect(path='Xming')
 tibia_dialogs = tibia.windows()
 xming = re.split(r"'", str(tibia_dialogs[0]))
+
+print(f"tibia: {tibia}")
+print(f"tibia dialogs: {tibia_dialogs}")
+print(f"xming: {xming}")

@@ -30,4 +30,4 @@ obs.: This program only works if you're already logged on a character.
 
 * Victor
 * Thiago
-* Luiz
+* Luiz (github.com/lfsmariz)
